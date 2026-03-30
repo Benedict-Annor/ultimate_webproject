@@ -19,13 +19,11 @@ const logger = createLogger({
         )
       ),
     }),
-    new transports.File({
-      filename: path.join(__dirname, 'logs', 'error.log'),
-      level: 'error',
-    }),
-    new transports.File({
-      filename: path.join(__dirname, 'logs', 'combined.log'),
-    }),
+    // File transports only in local dev — Vercel filesystem is read-only
+    ...(!process.env.VERCEL ? [
+      new transports.File({ filename: path.join(__dirname, 'logs', 'error.log'), level: 'error' }),
+      new transports.File({ filename: path.join(__dirname, 'logs', 'combined.log') }),
+    ] : []),
   ],
 });
 

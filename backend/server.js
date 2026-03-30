@@ -8,9 +8,11 @@ const { seed }  = require('./db');
 const logger    = require('./logger');
 const fs        = require('fs');
 
-// Ensure logs directory exists
-const logsDir = path.join(__dirname, 'logs');
-if (!fs.existsSync(logsDir)) fs.mkdirSync(logsDir);
+// Ensure logs directory exists (local only — Vercel filesystem is read-only)
+if (!process.env.VERCEL) {
+  const logsDir = path.join(__dirname, 'logs');
+  if (!fs.existsSync(logsDir)) fs.mkdirSync(logsDir);
+}
 
 const app    = express();
 const BOOT_ID = Date.now().toString();
@@ -65,9 +67,16 @@ app.use((err, _req, res, _next) => {
   res.status(500).json({ error: 'Internal server error' });
 });
 
-// ── Start ──────────────────────────────────────────────────
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, async () => {
-  logger.info(`Server running at http://localhost:${PORT}`);
-  try { await seed(); } catch (err) { logger.error('Seed error: ' + err.message); }
-});
+// ── Start (local dev only — Vercel handles listening itself) ─
+if (!process.env.VERCEL) {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, async () => {
+    logger.info(`Server running at http://localhost:${PORT}`);
+    try { await seed(); } catch (err) { logger.error('Seed error: ' + err.message); }
+  });
+} else {
+  // Seed on first Vercel cold start
+  seed().catch(err => logger.error('Seed error: ' + err.message));
+}
+
+module.exports = app;

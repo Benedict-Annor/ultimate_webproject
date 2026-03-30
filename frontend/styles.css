@@ -1067,25 +1067,91 @@ html.dark .stat-card-link:hover {
   }
   .main-header h1 { font-size: 1.35rem; }
   .header-actions { flex-wrap: wrap; gap: 8px; }
-  .main-content { padding: 16px 20px; }
+  .main-content { padding: 16px 16px; }
 
-  /* Stats */
+  /* Stats — 2-col with compact card layout */
   .stats-row,
   #page-student-dashboard .stats-row {
     grid-template-columns: repeat(2, 1fr);
-    gap: 14px;
+    gap: 12px;
     margin-bottom: 20px;
   }
+  .stat-card {
+    padding: 16px;
+    border-radius: var(--radius-sm);
+  }
+  .stat-top { margin-bottom: 10px; }
+  .stat-icon {
+    width: 40px; height: 40px;
+    border-radius: var(--radius-sm);
+  }
+  .stat-icon svg { width: 18px; height: 18px; }
+  .stat-more { display: none; }
+  .stat-value { font-size: 1.5rem; }
+  .stat-label { font-size: 12px; }
+  .stat-badge { font-size: 11px; }
+
+  /* General cards — subtle lift & tighter radius */
+  .card {
+    padding: 18px;
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-sm);
+  }
+  .card-header { margin-bottom: 14px; }
+  .card-header h3 { font-size: 15px; }
 
   /* Grid layouts */
-  .two-col { grid-template-columns: 1fr; }
-  .three-col { grid-template-columns: 1fr; }
-  .schedule-list { grid-template-columns: 1fr; }
+  .two-col { grid-template-columns: 1fr; gap: 16px; }
+  .three-col { grid-template-columns: 1fr; gap: 16px; }
+  .schedule-list { grid-template-columns: 1fr; gap: 10px; }
   .qa-grid { grid-template-columns: 1fr; }
-  .features-grid { grid-template-columns: 1fr; }
+  .features-grid { grid-template-columns: 1fr; gap: 16px; }
   .profile-wrap { grid-template-columns: 1fr; }
   .edit-form-grid { grid-template-columns: 1fr; }
   .edit-form-grid .span-2 { grid-column: auto; }
+
+  /* Today's schedule items — compact horizontal cards */
+  .schedule-item {
+    padding: 12px 14px;
+    border-radius: var(--radius-sm);
+    gap: 10px;
+  }
+  .schedule-bar { width: 4px; height: 48px; }
+  .schedule-info h4 { font-size: 14px; }
+  .schedule-meta { font-size: 12px; gap: 2px; }
+
+  /* Student today slots — tighter */
+  .today-schedule-slot { padding: 10px 14px; border-radius: var(--radius-sm); }
+
+  /* Quick actions — horizontal scroll on tight screens */
+  .qa-btn {
+    padding: 14px;
+    border-radius: var(--radius-sm);
+    gap: 12px;
+  }
+  .qa-icon { width: 36px; height: 36px; }
+  .qa-text h4 { font-size: 14px; }
+  .qa-text p { font-size: 12px; }
+
+  /* Feature cards on landing */
+  .feat-card {
+    padding: 20px;
+    border-radius: var(--radius-sm);
+  }
+  .feat-card:hover { transform: none; box-shadow: var(--shadow-sm); }
+  .feat-icon { width: 40px; height: 40px; margin-bottom: 14px; }
+
+  /* Activity items — compact */
+  .activity-item { padding: 12px 0; gap: 10px; }
+  .activity-avatar { width: 28px; height: 28px; font-size: 10px; }
+  .activity-time { margin-left: 0; margin-top: 4px; }
+
+  /* Notifications — stack-friendly */
+  .notif-item { gap: 10px; padding: 14px 0; }
+  .notif-icon { width: 36px; height: 36px; flex-shrink: 0; }
+  .notif-body h4 { font-size: 13px; }
+  .notif-body p { font-size: 12px; }
+  .notif-time { font-size: 11px; }
 
   /* Landing: topnav */
   .topnav { padding: 0 16px; height: 60px; }
@@ -1098,12 +1164,8 @@ html.dark .stat-card-link:hover {
   .hero-btns { flex-direction: column; width: 100%; max-width: 320px; }
   .hero-btns .btn { width: 100%; justify-content: center; }
 
-  /* Landing: features & CTA */
-  .features { padding: 48px 20px; }
-  .section-title h3 { font-size: 1.5rem; }
-  .section-title p { font-size: 15px; }
-  .feat-card { padding: 24px; }
-  .cta-section { margin: 0 16px 24px; padding: 48px 20px; border-radius: 14px; }
+  /* Landing: CTA */
+  .cta-section { margin: 0 16px 24px; padding: 40px 20px; border-radius: var(--radius); }
   .cta-section h3 { font-size: 1.5rem; }
   .cta-section p { font-size: 16px; }
 
@@ -1131,11 +1193,15 @@ html.dark .stat-card-link:hover {
   .filter-tab { flex: 1; min-width: 0; text-align: center; padding: 9px 12px; }
 
   /* Edit schedule banner */
-  .edit-course-banner { flex-direction: column; align-items: flex-start; padding: 18px; }
+  .edit-course-banner { flex-direction: column; align-items: flex-start; padding: 16px; border-radius: var(--radius-sm); }
   .edit-banner-left { flex-wrap: wrap; }
   .edit-actions { flex-direction: column; width: 100%; }
   .edit-actions .btn { width: 100%; justify-content: center; }
   .edit-time-row { flex-direction: column; gap: 8px; }
+
+  /* Edit class picker cards */
+  .edit-class-list { grid-template-columns: 1fr; gap: 10px; }
+  .edit-class-card { padding: 14px 16px; border-radius: var(--radius-sm); }
 
   /* Clash table responsive */
   .clash-table { font-size: 13px; }
@@ -1143,22 +1209,20 @@ html.dark .stat-card-link:hover {
   .clash-table td { padding: 10px 8px; }
   .action-btns { flex-wrap: wrap; }
 
-  /* Modals */
+  /* Modals — full-width friendly */
   .modal-box { width: calc(100% - 32px); min-width: 0; max-width: 480px; margin: 16px; }
-  .modal { max-width: calc(100% - 32px); margin: 16px; }
+  .modal { max-width: calc(100% - 32px); margin: 16px; border-radius: var(--radius-sm); }
   .modal-header { padding: 16px 18px 14px; }
   .modal-body { padding: 16px 18px; }
   .modal-footer { padding: 14px 18px; flex-wrap: wrap; }
 
-  /* Notifications */
-  .notif-item { gap: 10px; }
-  .notif-body p { font-size: 12px; }
-
   /* Settings */
   .setting-row { flex-direction: column; align-items: flex-start; gap: 12px; }
 
-  /* Edit class picker */
-  .edit-class-list { grid-template-columns: 1fr; }
+  /* Student settings cards */
+  .settings-card-header { margin-bottom: 16px; gap: 10px; }
+  .settings-card-header h3 { font-size: 15px; }
+  .settings-toggle-row { flex-wrap: wrap; gap: 8px; }
 
   /* Bar chart */
   .bar-chart { gap: 8px; }
@@ -1167,35 +1231,50 @@ html.dark .stat-card-link:hover {
   .donut-wrap { flex-direction: column; align-items: flex-start; }
 
   /* Day view entries */
-  .day-entry { flex-direction: column; gap: 8px; }
+  .day-entry { flex-direction: column; gap: 8px; padding: 12px; border-radius: var(--radius-sm); }
   .day-entry-badges { align-items: flex-start; }
 
   /* Detail rows in modals */
   .detail-row { flex-direction: column; gap: 4px; }
   .detail-row .detail-label { min-width: 0; }
 
-  /* Quick action buttons layout */
-  .qa-btn { padding: 14px; }
-
-  /* Activity items */
-  .activity-time { margin-left: 0; margin-top: 4px; }
+  /* Clickable stat cards — disable hover transform on touch */
+  .stat-card-link:hover { transform: none; box-shadow: none; }
+  .stat-card-link:active { transform: scale(0.98); }
 }
 
 /* ── Mobile: small phone (≤ 480px) ── */
 @media (max-width: 480px) {
-  .main-content { padding: 12px 14px; }
+  .main-content { padding: 12px 12px; }
 
+  /* Stats — single column, compact horizontal layout */
   .stats-row,
   #page-student-dashboard .stats-row {
     grid-template-columns: 1fr;
-    gap: 12px;
+    gap: 10px;
   }
+  .stat-card {
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-direction: row;
+  }
+  .stat-top {
+    margin-bottom: 0;
+    flex-shrink: 0;
+  }
+  .stat-icon {
+    width: 44px; height: 44px;
+  }
+  .stat-value { font-size: 1.35rem; }
+  .stat-label { font-size: 11px; margin-top: 2px; }
+  .stat-badge { margin-top: 2px; font-size: 10px; }
+  .stat-card .stat-top + * { flex: 1; }
 
-  .stat-card { padding: 16px 18px; }
-
-  .main-header { padding: 52px 14px 14px; }
-  .main-header h1 { font-size: 1.2rem; }
-  .main-header p  { font-size: 13px; }
+  .main-header { padding: 52px 12px 12px; }
+  .main-header h1 { font-size: 1.15rem; }
+  .main-header p  { font-size: 12px; }
 
   /* Landing topnav tighter */
   .topnav { padding: 0 12px; height: 56px; }
@@ -1211,53 +1290,104 @@ html.dark .stat-card-link:hover {
   .hero p { font-size: 14px; margin-bottom: 28px; }
   .hero-badge { font-size: 12px; padding: 5px 12px; margin-bottom: 20px; }
 
-  /* Features */
-  .features { padding: 32px 14px; }
-  .section-title { margin-bottom: 32px; }
+  /* Feature cards — full-bleed style */
+  .features { padding: 28px 12px; }
+  .features-grid { gap: 12px; }
+  .section-title { margin-bottom: 28px; }
   .section-title h3 { font-size: 1.3rem; }
-  .feat-card { padding: 20px; }
-  .feat-card p { font-size: 14px; }
+  .feat-card {
+    padding: 18px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .feat-icon { margin-bottom: 0; flex-shrink: 0; width: 40px; height: 40px; border-radius: var(--radius-sm); }
+  .feat-card h4 { font-size: 14px; margin-bottom: 4px; }
+  .feat-card p { font-size: 13px; }
 
   /* CTA */
-  .cta-section { margin: 0 12px 16px; padding: 32px 16px; }
-  .cta-section h3 { font-size: 1.3rem; }
-  .cta-section p { font-size: 14px; margin-bottom: 24px; }
+  .cta-section { margin: 0 12px 16px; padding: 28px 16px; border-radius: var(--radius-sm); }
+  .cta-section h3 { font-size: 1.25rem; }
+  .cta-section p { font-size: 14px; margin-bottom: 20px; }
 
   /* Footer */
-  .site-footer { padding: 16px 14px; }
+  .site-footer { padding: 16px 12px; }
 
-  /* Auth pages */
-  .auth-card { padding: 32px 20px; }
-  .auth-header h1 { font-size: 1.5rem; }
-  .auth-icon { width: 52px; height: 52px; border-radius: 14px; }
+  /* Auth pages — tighter card */
+  .auth-card { padding: 28px 18px; border-radius: var(--radius-sm); }
+  .auth-header h1 { font-size: 1.4rem; }
+  .auth-icon { width: 48px; height: 48px; border-radius: var(--radius-sm); }
 
-  /* Cards */
-  .card { padding: 18px; }
-  .card-header { margin-bottom: 14px; }
-  .card-header h3 { font-size: 15px; }
+  /* Cards — edge-to-edge feel */
+  .card {
+    padding: 16px;
+    border-radius: var(--radius-sm);
+  }
+  .card-header { margin-bottom: 12px; }
+  .card-header h3 { font-size: 14px; }
 
-  /* Schedule items */
-  .schedule-item { padding: 12px; }
-  .schedule-bar { height: 48px; }
-  .schedule-info h4 { font-size: 15px; }
+  /* Schedule items — minimal */
+  .schedule-item {
+    padding: 10px 12px;
+    gap: 8px;
+    border-radius: var(--radius-sm);
+  }
+  .schedule-bar { width: 3px; height: 40px; }
+  .schedule-info h4 { font-size: 13px; }
+  .schedule-meta { font-size: 11px; }
 
-  /* Modals */
-  .modal-box { width: calc(100% - 24px); margin: 12px; padding: 18px; }
-  .event-modal-banner { padding: 20px 18px 18px; }
-  .event-modal-title { font-size: 16px; }
+  /* Student today slots */
+  .today-schedule-slot { padding: 10px 12px; }
 
-  /* Notifications */
-  .notif-item.unread { margin: 0 -18px; padding: 14px 18px; }
+  /* Notifications — tighter */
+  .notif-item { padding: 12px 0; }
+  .notif-item.unread { margin: 0 -16px; padding: 12px 16px; border-radius: var(--radius-sm); }
+  .notif-icon { width: 32px; height: 32px; }
+  .notif-dot { width: 6px; height: 6px; }
 
-  /* Buttons */
-  .btn { padding: 10px 18px; font-size: 14px; }
-  .btn-sm { padding: 6px 14px; font-size: 13px; }
+  /* Activity feed */
+  .activity-item { padding: 10px 0; gap: 8px; }
+
+  /* Modals — near full screen */
+  .modal-box { width: calc(100% - 20px); margin: 10px; padding: 16px; border-radius: var(--radius-sm); }
+  .modal { border-radius: var(--radius-sm); }
+  .event-modal-banner { padding: 18px 16px 16px; }
+  .event-modal-title { font-size: 15px; }
+
+  /* Buttons — full-width in tight contexts */
+  .btn { padding: 10px 16px; font-size: 13px; }
+  .btn-sm { padding: 6px 12px; font-size: 12px; }
+  .modal-footer .btn { flex: 1; justify-content: center; }
 
   /* Sidebar expand btn position */
   .sidebar-expand-btn { top: 12px; left: 8px; }
 
   /* Settings items */
-  .settings-section h3 { font-size: 15px; }
+  .settings-section h3 { font-size: 14px; }
+  .settings-card-header { gap: 10px; }
+  .settings-icon-badge { width: 36px; height: 36px; }
+  .settings-toggle-row p:first-child { font-size: 14px; }
+  .settings-sec-item { padding: 14px 16px; }
+
+  /* Edit schedule cards */
+  .edit-class-card { padding: 12px 14px; }
+  .edit-course-banner { padding: 14px; }
+
+  /* Day view — tight cards */
+  .day-entry { padding: 10px 12px; border-radius: var(--radius-sm); }
+  .day-entry-time { font-size: 11px; min-width: 70px; }
+  .day-entry-course { font-size: 13px; }
+
+  /* Toast position on small screens */
+  #toast-container { bottom: 16px; right: 16px; left: 16px; max-width: none; }
+  .toast-item { font-size: 13px; padding: 12px 16px; }
+
+  /* Quick actions */
+  .qa-btn { padding: 12px; gap: 10px; }
+  .qa-icon { width: 32px; height: 32px; }
+  .qa-text h4 { font-size: 13px; }
+  .qa-text p { font-size: 11px; }
 }
 
 /* ══════════════════════════════════════════════════════════

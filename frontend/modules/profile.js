@@ -8,12 +8,17 @@ async function loadProfile() {
     if (!res) return;
     const user = await res.json();
     const set  = (id, val) => { const el = document.getElementById(id); if (el) el.value = val || ''; };
-    set('prof-fullname',       user.full_name);
-    set('prof-email',          user.email);
-    set('prof-staff-id',       user.staff_id || 'N/A');
-    set('sprofile-fullname',   user.full_name);
-    set('sprofile-email',      user.email);
-    set('sprofile-student-id', user.student_id || 'N/A');
+    set('prof-fullname',             user.full_name);
+    set('prof-email',                user.email);
+    set('prof-staff-id',             user.staff_id || 'N/A');
+    set('sprofile-fullname',         user.full_name);
+    set('sprofile-email',            user.email);
+    set('sprofile-student-id',       user.student_id || 'N/A');
+    set('sprofile-department',       user.departments?.name || '—');
+    const enrollDate = user.created_at
+      ? new Date(user.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
+      : '—';
+    set('sprofile-enrollment-date',  enrollDate);
   } catch (err) {
     console.error('loadProfile error:', err);
   }

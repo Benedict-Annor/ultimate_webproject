@@ -51,8 +51,13 @@ function updateDashboard() {
   const user = JSON.parse(localStorage.getItem('user'));
   if (!user) return;
 
-  const today            = new Date().getDay(); // 0=Sun…6=Sat
+  const now              = new Date();
+  const today            = now.getDay(); // 0=Sun…6=Sat
   const todayDayOfWeek   = today === 0 || today === 6 ? -1 : today;
+  const dateStr          = now.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  document.querySelectorAll('.dashboard-date').forEach(el => {
+    el.textContent = `Here's what's happening with your schedule today — ${dateStr}`;
+  });
 
   const activityHtml = (data) => data.slice(0, 5).map(n => {
     const initials = (n.title || 'N').split(' ').map(w => w[0]).join('').toUpperCase().substring(0, 2);
@@ -63,12 +68,15 @@ function updateDashboard() {
   }).join('') || '<p style="padding:12px;color:var(--text-muted);font-size:13px;">No recent activity.</p>';
 
   if (user.role === 'lecturer') {
-    const myEntries    = timetableData.filter(e => String(e.lecturer?.id) === String(user.id));
-    const todayEntries = myEntries.filter(e => (e.day_of_week || (DAY_NAMES.indexOf(e.day) + 1)) === todayDayOfWeek);
-    const statClasses  = document.getElementById('stat-classes');
-    const statToday    = document.getElementById('stat-today');
+    const myEntries      = timetableData.filter(e => String(e.lecturer?.id) === String(user.id));
+    const todayEntries   = myEntries.filter(e => (e.day_of_week || (DAY_NAMES.indexOf(e.day) + 1)) === todayDayOfWeek);
+    const distinctCourses = new Set(myEntries.map(e => e.offering?.course?.title).filter(Boolean)).size;
+    const statClasses    = document.getElementById('stat-classes');
+    const statToday      = document.getElementById('stat-today');
+    const statActive     = document.getElementById('stat-active-courses');
     if (statClasses) statClasses.textContent = myEntries.length;
     if (statToday)   statToday.textContent   = todayEntries.length;
+    if (statActive)  statActive.textContent  = distinctCourses;
     const activityEl   = document.getElementById('dash-activity');
     if (activityEl) activityEl.innerHTML = activityHtml(notificationsData);
     const scheduleEl   = document.getElementById('dash-today-schedule');
@@ -80,11 +88,14 @@ function updateDashboard() {
   }
 
   if (user.role === 'student') {
-    const todayEntries  = timetableData.filter(e => (e.day_of_week || (DAY_NAMES.indexOf(e.day) + 1)) === todayDayOfWeek);
-    const sstatClasses  = document.getElementById('sstat-classes');
-    const sstatToday    = document.getElementById('sstat-today');
+    const todayEntries    = timetableData.filter(e => (e.day_of_week || (DAY_NAMES.indexOf(e.day) + 1)) === todayDayOfWeek);
+    const sDistinctCourses = new Set(timetableData.map(e => e.offering?.course?.title).filter(Boolean)).size;
+    const sstatClasses    = document.getElementById('sstat-classes');
+    const sstatToday      = document.getElementById('sstat-today');
+    const sstatActive     = document.getElementById('sstat-active-courses');
     if (sstatClasses) sstatClasses.textContent = timetableData.length;
     if (sstatToday)   sstatToday.textContent   = todayEntries.length;
+    if (sstatActive)  sstatActive.textContent  = sDistinctCourses;
     const sactivityEl   = document.getElementById('sdash-activity');
     if (sactivityEl) sactivityEl.innerHTML = activityHtml(notificationsData);
     const sscheduleEl   = document.getElementById('sdash-today-schedule');

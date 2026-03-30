@@ -10,10 +10,40 @@
   }
 })();
 
+document.addEventListener('DOMContentLoaded', syncDarkModeToggles);
+
 function toggleDarkMode() {
   document.documentElement.classList.toggle('dark');
   const isDark = document.documentElement.classList.contains('dark');
   localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  document.querySelectorAll('.dark-mode-setting-toggle').forEach(cb => { cb.checked = isDark; });
+}
+
+function syncDarkModeToggles() {
+  const isDark = document.documentElement.classList.contains('dark');
+  document.querySelectorAll('.dark-mode-setting-toggle').forEach(cb => { cb.checked = isDark; });
+}
+
+async function submitChangePassword() {
+  const current = document.getElementById('cp-current').value.trim();
+  const newPw    = document.getElementById('cp-new').value.trim();
+  const confirm  = document.getElementById('cp-confirm').value.trim();
+  if (!current || !newPw || !confirm) { showToast('Please fill in all fields', 'warning'); return; }
+  if (newPw.length < 6) { showToast('New password must be at least 6 characters', 'warning'); return; }
+  if (newPw !== confirm) { showToast('New passwords do not match', 'warning'); return; }
+  try {
+    const res  = await apiFetch('/auth/password', { method: 'PUT', body: JSON.stringify({ current_password: current, new_password: newPw }) });
+    if (!res) return;
+    const data = await res.json();
+    if (!res.ok) { showToast(data.error || 'Failed to update password', 'error'); return; }
+    showToast('Password updated successfully', 'success');
+    closeModal('modal-change-password');
+    document.getElementById('cp-current').value = '';
+    document.getElementById('cp-new').value = '';
+    document.getElementById('cp-confirm').value = '';
+  } catch (err) {
+    showToast('Server error. Please try again.', 'error');
+  }
 }
 
 function toggleSidebar(pageId) {

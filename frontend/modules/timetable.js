@@ -31,8 +31,8 @@ function renderTimetable(containerId, isLecturer) {
   const colors = ['green', 'blue', 'amber', 'red', 'teal', 'purple'];
 
   let html = `<div style="overflow-x:auto;"><table class="tt-grid"><thead><tr>
-    <th style="background:#f9fafb;color:var(--text-muted);font-weight:500;font-size:14px;padding:16px;">Time</th>
-    ${DAY_NAMES.map(d => `<th style="font-weight:600;font-size:14px;color:var(--text);padding:16px;">${d}</th>`).join('')}
+    <th>Time</th>
+    ${DAY_NAMES.map(d => `<th>${d}</th>`).join('')}
   </tr></thead><tbody>`;
 
   times.forEach(time => {
@@ -51,7 +51,7 @@ function renderTimetable(containerId, isLecturer) {
                           : match.group_number === 2 ? '<span class="tt-group-badge grp2">G2</span>'
                           : '<span class="tt-group-badge both">Both</span>';
         const cancelBadge = cancelled ? '<span class="tt-cancelled-badge">Cancelled</span>' : '';
-        html += `<td style="border-left:1px solid var(--border-light);padding:8px;vertical-align:top;">
+        html += `<td class="tt-cell" style="padding:8px;vertical-align:top;">
           <div class="tt-event ${colorClass}${cancelled ? ' cancelled' : ''}" onclick="openEventModal('${match.id}')">
             <strong>${escapeHtml(course?.title || 'Unknown')}</strong>
             <span>${escapeHtml(course?.code || '')}</span>
@@ -60,7 +60,7 @@ function renderTimetable(containerId, isLecturer) {
             <div style="margin-top:4px;display:flex;gap:4px;flex-wrap:wrap;">${groupBadge}${cancelBadge}</div>
           </div></td>`;
       } else {
-        html += '<td style="border-left:1px solid var(--border-light);padding:8px;vertical-align:top;"></td>';
+        html += '<td class="tt-cell" style="padding:8px;vertical-align:top;"></td>';
       }
     });
     html += '</tr>';

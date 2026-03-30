@@ -49,11 +49,10 @@ async function signIn() {
 
     if (user.role === 'lecturer') {
       goTo('page-dashboard');
-      setTimeout(() => { loadTimetable(); loadNotifications(); updateDashboard(); }, 100);
     } else {
       goTo('page-student-dashboard');
-      setTimeout(() => { loadTimetable(); loadNotifications(); updateDashboard(); }, 100);
     }
+    Promise.all([loadTimetable(), loadNotifications()]).then(() => updateDashboard());
   } catch (err) {
     console.error(err);
     showToast('Server error. Make sure the backend is running.', 'error');

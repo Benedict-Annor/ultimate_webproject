@@ -60,9 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const savedTTView = localStorage.getItem('ttView');
         if (savedTTView) setTimeout(() => setTTView(savedTTView, ''), 100);
 
-        loadTimetable();
-        loadNotifications();
-        setTimeout(() => updateDashboard(), 500);
+        Promise.all([loadTimetable(), loadNotifications()]).then(() => updateDashboard());
       })
       .catch(() => {
         // Server unreachable — stay on landing page

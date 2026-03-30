@@ -1,0 +1,25 @@
+# ── Dependencies ───────────────────────────────────────────
+backend/node_modules/
+
+# ── Environment variables (NEVER commit real credentials) ──
+backend/.env
+.env
+.env.local
+.env.*.local
+
+# ── Logs ───────────────────────────────────────────────────
+*.log
+npm-debug.log*
+backend/logs/
+
+# ── OS / editor files ──────────────────────────────────────
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# ── Leftover file-store data (replaced by Supabase) ───────
+backend/data/
+
+# ── Claude Code workspace ──────────────────────────────────
+.claude/

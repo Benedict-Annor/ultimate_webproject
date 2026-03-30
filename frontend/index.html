@@ -81,7 +81,7 @@
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
         </div>
         <h4>Easy Management</h4>
-        <p>Simple interface for adding, editing, and deleting timetable entries with drag-and-drop support.</p>
+        <p>Simple interface for adding, editing, and managing timetable entries with instant updates.</p>
       </div>
       <div class="feat-card">
         <div class="feat-icon">
@@ -309,7 +309,7 @@
         <a class="nav-link" onclick="switchPage('page-notifications')">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
           Notifications
-          <span class="nav-badge">2</span>
+          <span class="nav-badge" style="display:none;"></span>
         </a>
         <a class="nav-link" onclick="switchPage('page-edit-schedule')">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
@@ -317,16 +317,21 @@
         </a>
       </nav>
       <div class="sidebar-footer">
-        <div class="user-card" onclick="switchPage('page-profile')" style="cursor:pointer;" title="View profile">
+        <div class="user-card user-card-toggle" onclick="toggleLogoutBtn(this)" style="cursor:pointer;" title="View profile">
           <div class="avatar">JD</div>
           <div class="user-info">
             <p>John Doe</p>
             <p>Lecturer</p>
           </div>
         </div>
-        <button class="btn btn-sm" style="width:100%;margin-top:8px;justify-content:center;gap:8px;background:var(--red);color:#fff;" onclick="logout()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Logout
-        </button>
+        <div class="sidebar-user-menu">
+          <a class="sidebar-menu-link profile-link" onclick="switchPage('page-profile')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>View Profile
+          </a>
+          <button class="sidebar-menu-link logout-link" onclick="logout()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Logout
+          </button>
+        </div>
       </div>
     </aside>
 
@@ -339,13 +344,12 @@
           <p class="dashboard-date">Here's what's happening with your schedule today.</p>
         </div>
         <div class="header-actions">
+          <button class="dark-toggle" onclick="switchPage('page-settings')" title="Settings">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </button>
           <button class="dark-toggle" onclick="toggleDarkMode()" title="Toggle dark mode">
             <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
             <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-          </button>
-          <button class="btn btn-ghost btn-sm">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
-            Filter
           </button>
         </div>
       </div>
@@ -473,7 +477,7 @@
         </a>
         <a class="nav-link" onclick="switchPage('page-notifications')">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-          Notifications <span class="nav-badge">2</span>
+          Notifications <span class="nav-badge" style="display:none;"></span>
         </a>
         <a class="nav-link" onclick="switchPage('page-edit-schedule')">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
@@ -481,13 +485,18 @@
         </a>
       </nav>
       <div class="sidebar-footer">
-        <div class="user-card" onclick="switchPage('page-profile')" style="cursor:pointer;" title="View profile">
+        <div class="user-card user-card-toggle" onclick="toggleLogoutBtn(this)" style="cursor:pointer;" title="View profile">
           <div class="avatar">JD</div>
           <div class="user-info"><p>John Doe</p><p>Lecturer</p></div>
         </div>
-        <button class="btn btn-sm" style="width:100%;margin-top:8px;justify-content:center;gap:8px;background:var(--red);color:#fff;" onclick="logout()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Logout
-        </button>
+        <div class="sidebar-user-menu">
+          <a class="sidebar-menu-link profile-link" onclick="switchPage('page-profile')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>View Profile
+          </a>
+          <button class="sidebar-menu-link logout-link" onclick="logout()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Logout
+          </button>
+        </div>
       </div>
     </aside>
 
@@ -498,10 +507,16 @@
           <h1>Timetable</h1>
           <p>View your weekly schedule</p>
         </div>
-        <div style="display:flex;align-items:center;gap:8px;">
+        <div class="header-actions">
           <div id="tt-header-actions-schedule">
-            <button class="btn-add" onclick="openAddForm()">+ Add Schedule</button>
+            <button class="btn btn-primary btn-sm" onclick="openAddForm()">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Add Schedule
+            </button>
           </div>
+          <button class="dark-toggle" onclick="switchPage('page-settings')" title="Settings">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </button>
           <button class="dark-toggle" onclick="toggleDarkMode()" title="Toggle dark mode">
             <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
             <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
@@ -574,13 +589,18 @@
         </a>
       </nav>
       <div class="sidebar-footer">
-        <div class="user-card">
+        <div class="user-card user-card-toggle" onclick="toggleLogoutBtn(this)" style="cursor:pointer;" title="View profile">
           <div class="avatar">JD</div>
           <div class="user-info"><p>John Doe</p><p>Lecturer</p></div>
         </div>
-        <button class="btn btn-sm" style="width:100%;margin-top:8px;justify-content:center;gap:8px;background:var(--red);color:#fff;" onclick="logout()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Logout
-        </button>
+        <div class="sidebar-user-menu">
+          <a class="sidebar-menu-link profile-link" onclick="switchPage('page-profile')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>View Profile
+          </a>
+          <button class="sidebar-menu-link logout-link" onclick="logout()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Logout
+          </button>
+        </div>
       </div>
     </aside>
 
@@ -592,9 +612,8 @@
           <p>Manage your personal information</p>
         </div>
         <div class="header-actions">
-          <button class="btn btn-ghost btn-sm" onclick="switchPage('page-settings')">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M4.93 19.07l1.41-1.41M19.07 19.07l-1.41-1.41M1 12h2M21 12h2M12 1v2M12 21v2"/></svg>
-            Settings
+          <button class="dark-toggle" onclick="switchPage('page-settings')" title="Settings">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
           </button>
           <button class="dark-toggle" onclick="toggleDarkMode()" title="Toggle dark mode">
             <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -609,7 +628,7 @@
               <div class="big-avatar">JD</div>
               <h3 class="profile-name">John Doe</h3>
               <p class="profile-role">Lecturer</p>
-              <button class="btn btn-ghost btn-sm change-pic-btn" style="margin:0 auto;">Change Profile Picture</button>
+              <button class="btn btn-ghost btn-sm change-pic-btn" style="margin:0 auto;" onclick="openPicUpload()">Change Profile Picture</button>
             </div>
           </div>
           <div class="card">
@@ -684,13 +703,18 @@
         </a>
       </nav>
       <div class="sidebar-footer">
-        <div class="user-card" onclick="switchPage('page-profile')" style="cursor:pointer;" title="View profile">
+        <div class="user-card user-card-toggle" onclick="toggleLogoutBtn(this)" style="cursor:pointer;" title="View profile">
           <div class="avatar">JD</div>
           <div class="user-info"><p>John Doe</p><p>Lecturer</p></div>
         </div>
-        <button class="btn btn-sm" style="width:100%;margin-top:8px;justify-content:center;gap:8px;background:var(--red);color:#fff;" onclick="logout()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Logout
-        </button>
+        <div class="sidebar-user-menu">
+          <a class="sidebar-menu-link profile-link" onclick="switchPage('page-profile')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>View Profile
+          </a>
+          <button class="sidebar-menu-link logout-link" onclick="logout()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Logout
+          </button>
+        </div>
       </div>
     </aside>
 
@@ -814,20 +838,25 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Timetable
         </a>
         <a class="nav-link active" onclick="switchPage('page-notifications')">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>Notifications <span class="nav-badge">2</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>Notifications <span class="nav-badge" style="display:none;"></span>
         </a>
         <a class="nav-link" onclick="switchPage('page-edit-schedule')">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Edit Schedule
         </a>
       </nav>
       <div class="sidebar-footer">
-        <div class="user-card" onclick="switchPage('page-profile')" style="cursor:pointer;" title="View profile">
+        <div class="user-card user-card-toggle" onclick="toggleLogoutBtn(this)" style="cursor:pointer;" title="View profile">
           <div class="avatar">JD</div>
           <div class="user-info"><p>John Doe</p><p>Lecturer</p></div>
         </div>
-        <button class="btn btn-sm" style="width:100%;margin-top:8px;justify-content:center;gap:8px;background:var(--red);color:#fff;" onclick="logout()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Logout
-        </button>
+        <div class="sidebar-user-menu">
+          <a class="sidebar-menu-link profile-link" onclick="switchPage('page-profile')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>View Profile
+          </a>
+          <button class="sidebar-menu-link logout-link" onclick="logout()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Logout
+          </button>
+        </div>
       </div>
     </aside>
 
@@ -839,11 +868,17 @@
           <p>Stay updated with your schedule and reports</p>
         </div>
         <div class="header-actions">
+          <button class="dark-toggle" onclick="switchPage('page-settings')" title="Settings">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </button>
           <button class="dark-toggle" onclick="toggleDarkMode()" title="Toggle dark mode">
             <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
             <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
           </button>
-          <button class="btn btn-ghost btn-sm" onclick="markAllRead()">Mark all as read</button>
+          <button class="btn btn-primary btn-sm" onclick="markAllRead()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Mark all read
+          </button>
         </div>
       </div>
       <div class="main-content">
@@ -880,20 +915,25 @@
         </a>
         <a class="nav-link" onclick="switchPage('page-notifications')">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>Notifications
-          <span class="nav-badge">5</span>
+          <span class="nav-badge" style="display:none;"></span>
         </a>
         <a class="nav-link active" onclick="switchPage('page-edit-schedule')">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Edit Schedule
         </a>
       </nav>
       <div class="sidebar-footer">
-        <div class="user-card" onclick="switchPage('page-profile')" style="cursor:pointer;" title="View profile">
+        <div class="user-card user-card-toggle" onclick="toggleLogoutBtn(this)" style="cursor:pointer;" title="View profile">
           <div class="avatar">JD</div>
           <div class="user-info"><p>John Doe</p><p>Lecturer</p></div>
         </div>
-        <button class="btn btn-sm" style="width:100%;margin-top:8px;justify-content:center;gap:8px;background:var(--red);color:#fff;" onclick="logout()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Logout
-        </button>
+        <div class="sidebar-user-menu">
+          <a class="sidebar-menu-link profile-link" onclick="switchPage('page-profile')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>View Profile
+          </a>
+          <button class="sidebar-menu-link logout-link" onclick="logout()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Logout
+          </button>
+        </div>
       </div>
     </aside>
 
@@ -905,6 +945,9 @@
           <p>Modify the scheduled time, room and instructor for the course</p>
         </div>
         <div class="header-actions">
+          <button class="dark-toggle" onclick="switchPage('page-settings')" title="Settings">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </button>
           <button class="dark-toggle" onclick="toggleDarkMode()" title="Toggle dark mode">
             <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
             <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
@@ -1165,13 +1208,21 @@
       <nav class="sidebar-nav">
         <a class="nav-link active" onclick="switchPage('page-student-dashboard')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Dashboard</a>
         <a class="nav-link " onclick="switchPage('page-student-timetable')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Timetable</a>
-        <a class="nav-link " onclick="switchPage('page-student-notifications')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>Notifications<span class="nav-badge">5</span></a>
+        <a class="nav-link " onclick="switchPage('page-student-notifications')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>Notifications<span class="nav-badge" style="display:none;"></span></a>
         <a class="nav-link " onclick="switchPage('page-student-profile')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile</a>
       </nav>
       <div class="sidebar-footer">
-        <div class="user-card" onclick="switchPage('page-student-profile')" style="cursor:pointer;" title="View profile">
+        <div class="user-card user-card-toggle" onclick="toggleLogoutBtn(this)" style="cursor:pointer;" title="View profile">
           <div class="avatar">JD</div>
           <div class="user-info"><p>John Doe</p><p>Student</p></div>
+        </div>
+        <div class="sidebar-user-menu">
+          <a class="sidebar-menu-link profile-link" onclick="switchPage('page-student-profile')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>View Profile
+          </a>
+          <button class="sidebar-menu-link logout-link" onclick="logout()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Logout
+          </button>
         </div>
       </div>
     </aside>
@@ -1183,6 +1234,9 @@
           <p class="dashboard-date">Here's what's happening with your schedule today.</p>
         </div>
         <div class="header-actions">
+          <button class="dark-toggle" onclick="switchPage('page-student-settings')" title="Settings">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </button>
           <button class="dark-toggle" onclick="toggleDarkMode()" title="Toggle dark mode">
             <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
             <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
@@ -1285,13 +1339,21 @@
       <nav class="sidebar-nav">
         <a class="nav-link " onclick="switchPage('page-student-dashboard')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Dashboard</a>
         <a class="nav-link active" onclick="switchPage('page-student-timetable')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Timetable</a>
-        <a class="nav-link " onclick="switchPage('page-student-notifications')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>Notifications<span class="nav-badge">5</span></a>
+        <a class="nav-link " onclick="switchPage('page-student-notifications')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>Notifications<span class="nav-badge" style="display:none;"></span></a>
         <a class="nav-link " onclick="switchPage('page-student-profile')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile</a>
       </nav>
       <div class="sidebar-footer">
-        <div class="user-card" onclick="switchPage('page-student-profile')" style="cursor:pointer;" title="View profile">
+        <div class="user-card user-card-toggle" onclick="toggleLogoutBtn(this)" style="cursor:pointer;" title="View profile">
           <div class="avatar">JD</div>
           <div class="user-info"><p>John Doe</p><p>Student</p></div>
+        </div>
+        <div class="sidebar-user-menu">
+          <a class="sidebar-menu-link profile-link" onclick="switchPage('page-student-profile')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>View Profile
+          </a>
+          <button class="sidebar-menu-link logout-link" onclick="logout()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Logout
+          </button>
         </div>
       </div>
     </aside>
@@ -1303,6 +1365,9 @@
           <p>View your weekly timetable</p>
         </div>
         <div class="header-actions">
+          <button class="dark-toggle" onclick="switchPage('page-student-settings')" title="Settings">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </button>
           <button class="dark-toggle" onclick="toggleDarkMode()" title="Toggle dark mode">
             <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
             <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
@@ -1349,13 +1414,21 @@
       <nav class="sidebar-nav">
         <a class="nav-link " onclick="switchPage('page-student-dashboard')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Dashboard</a>
         <a class="nav-link " onclick="switchPage('page-student-timetable')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Timetable</a>
-        <a class="nav-link active" onclick="switchPage('page-student-notifications')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>Notifications<span class="nav-badge">5</span></a>
+        <a class="nav-link active" onclick="switchPage('page-student-notifications')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>Notifications<span class="nav-badge" style="display:none;"></span></a>
         <a class="nav-link " onclick="switchPage('page-student-profile')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile</a>
       </nav>
       <div class="sidebar-footer">
-        <div class="user-card" onclick="switchPage('page-student-profile')" style="cursor:pointer;" title="View profile">
+        <div class="user-card user-card-toggle" onclick="toggleLogoutBtn(this)" style="cursor:pointer;" title="View profile">
           <div class="avatar">JD</div>
           <div class="user-info"><p>John Doe</p><p>Student</p></div>
+        </div>
+        <div class="sidebar-user-menu">
+          <a class="sidebar-menu-link profile-link" onclick="switchPage('page-student-profile')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>View Profile
+          </a>
+          <button class="sidebar-menu-link logout-link" onclick="logout()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Logout
+          </button>
         </div>
       </div>
     </aside>
@@ -1367,11 +1440,17 @@
           <p>Stay updated with your schedule changes</p>
         </div>
         <div class="header-actions">
+          <button class="dark-toggle" onclick="switchPage('page-student-settings')" title="Settings">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </button>
           <button class="dark-toggle" onclick="toggleDarkMode()" title="Toggle dark mode">
             <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
             <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
           </button>
-          <button class="btn btn-ghost btn-sm" onclick="markAllRead()">Mark all as read</button>
+          <button class="btn btn-primary btn-sm" onclick="markAllRead()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Mark all read
+          </button>
         </div>
       </div>
       <div class="main-content">
@@ -1407,13 +1486,21 @@
       <nav class="sidebar-nav">
         <a class="nav-link " onclick="switchPage('page-student-dashboard')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Dashboard</a>
         <a class="nav-link " onclick="switchPage('page-student-timetable')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Timetable</a>
-        <a class="nav-link " onclick="switchPage('page-student-notifications')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>Notifications<span class="nav-badge">5</span></a>
+        <a class="nav-link " onclick="switchPage('page-student-notifications')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>Notifications<span class="nav-badge" style="display:none;"></span></a>
         <a class="nav-link active" onclick="switchPage('page-student-profile')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile</a>
       </nav>
       <div class="sidebar-footer">
-        <div class="user-card">
+        <div class="user-card user-card-toggle" onclick="toggleLogoutBtn(this)" style="cursor:pointer;" title="View profile">
           <div class="avatar">JD</div>
           <div class="user-info"><p>John Doe</p><p>Student</p></div>
+        </div>
+        <div class="sidebar-user-menu">
+          <a class="sidebar-menu-link profile-link" onclick="switchPage('page-student-profile')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>View Profile
+          </a>
+          <button class="sidebar-menu-link logout-link" onclick="logout()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Logout
+          </button>
         </div>
       </div>
     </aside>
@@ -1425,9 +1512,8 @@
           <p>Manage your personal information</p>
         </div>
         <div class="header-actions">
-          <button class="btn btn-ghost btn-sm" onclick="switchPage('page-student-settings')">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M4.93 19.07l1.41-1.41M19.07 19.07l-1.41-1.41M1 12h2M21 12h2M12 1v2M12 21v2"/></svg>
-            Settings
+          <button class="dark-toggle" onclick="switchPage('page-student-settings')" title="Settings">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
           </button>
           <button class="dark-toggle" onclick="toggleDarkMode()" title="Toggle dark mode">
             <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -1445,7 +1531,7 @@
             <div>
               <h2 class="profile-name" style="font-size:20px;font-weight:700;margin-bottom:4px;">John Doe</h2>
               <p class="profile-role" style="font-size:15px;color:var(--text-muted);text-transform:capitalize;margin-bottom:8px;">student</p>
-              <button class="link-btn" style="font-size:14px;">Change Profile Picture</button>
+              <button class="link-btn" style="font-size:14px;" onclick="openPicUpload()">Change Profile Picture</button>
             </div>
           </div>
         </div>
@@ -1531,17 +1617,22 @@
       <nav class="sidebar-nav">
         <a class="nav-link " onclick="switchPage('page-student-dashboard')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Dashboard</a>
         <a class="nav-link " onclick="switchPage('page-student-timetable')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Timetable</a>
-        <a class="nav-link " onclick="switchPage('page-student-notifications')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>Notifications<span class="nav-badge">5</span></a>
+        <a class="nav-link " onclick="switchPage('page-student-notifications')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>Notifications<span class="nav-badge" style="display:none;"></span></a>
         <a class="nav-link " onclick="switchPage('page-student-profile')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile</a>
       </nav>
       <div class="sidebar-footer">
-        <div class="user-card" onclick="switchPage('page-student-profile')" style="cursor:pointer;" title="View profile">
+        <div class="user-card user-card-toggle" onclick="toggleLogoutBtn(this)" style="cursor:pointer;" title="View profile">
           <div class="avatar">JD</div>
           <div class="user-info"><p>John Doe</p><p>Student</p></div>
         </div>
-        <button class="btn btn-sm" style="width:100%;margin-top:8px;justify-content:center;gap:8px;background:var(--red);color:#fff;" onclick="logout()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Logout
-        </button>
+        <div class="sidebar-user-menu">
+          <a class="sidebar-menu-link profile-link" onclick="switchPage('page-student-profile')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>View Profile
+          </a>
+          <button class="sidebar-menu-link logout-link" onclick="logout()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Logout
+          </button>
+        </div>
       </div>
     </aside>
     <main class="main">
@@ -1559,59 +1650,59 @@
         </div>
       </div>
       <div class="main-content">
-        <div style="display:flex;flex-direction:column;gap:20px;">
+        <div class="settings-section" style="display:flex;flex-direction:column;gap:20px;">
 
           <!-- Notifications -->
           <div class="card">
-            <div style="display:flex;gap:12px;align-items:center;margin-bottom:20px;">
-              <div class="settings-icon-green" style="border-radius:10px;width:40px;height:40px;display:grid;place-items:center;flex-shrink:0;background:var(--accent-light);">
+            <div class="settings-card-header">
+              <div class="settings-icon-badge green">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
               </div>
-              <div><h3 style="font-size:16px;font-weight:600;">Notifications</h3><p style="font-size:13px;color:var(--text-muted);">Manage how you receive notifications</p></div>
+              <div><h3>Notifications</h3><p>Manage how you receive notifications</p></div>
             </div>
-            <div style="display:flex;flex-direction:column;gap:16px;">
-              <div style="display:flex;justify-content:space-between;align-items:center;"><div><p style="font-weight:500;font-size:15px;color:var(--text);">Email Notifications</p><p style="font-size:13px;color:var(--text-muted);">Receive updates via email</p></div><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;"><div><p style="font-weight:500;font-size:15px;color:var(--text);">Push Notifications</p><p style="font-size:13px;color:var(--text-muted);">Get notified on your device</p></div><label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;"><div><p style="font-weight:500;font-size:15px;color:var(--text);">Schedule Updates</p><p style="font-size:13px;color:var(--text-muted);">Get notified when timetable changes</p></div><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+            <div class="settings-section" style="display:flex;flex-direction:column;gap:16px;">
+              <div class="settings-toggle-row"><div><p>Email Notifications</p><p>Receive updates via email</p></div><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+              <div class="settings-toggle-row"><div><p>Push Notifications</p><p>Get notified on your device</p></div><label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label></div>
+              <div class="settings-toggle-row"><div><p>Schedule Updates</p><p>Get notified when timetable changes</p></div><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
             </div>
           </div>
 
           <!-- Appearance -->
           <div class="card">
-            <div style="display:flex;gap:12px;align-items:center;margin-bottom:20px;">
-              <div class="settings-icon-red" style="border-radius:10px;width:40px;height:40px;display:grid;place-items:center;flex-shrink:0;background:var(--red-light);">
+            <div class="settings-card-header">
+              <div class="settings-icon-badge red">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
               </div>
-              <div><h3 style="font-size:16px;font-weight:600;">Appearance</h3><p style="font-size:13px;color:var(--text-muted);">Customize how the app looks</p></div>
+              <div><h3>Appearance</h3><p>Customize how the app looks</p></div>
             </div>
-            <div style="display:flex;justify-content:space-between;align-items:center;"><div><p style="font-weight:500;font-size:15px;color:var(--text);">Dark Mode</p><p style="font-size:13px;color:var(--text-muted);">Use dark theme</p></div><label class="toggle"><input type="checkbox" class="dark-mode-setting-toggle" onchange="toggleDarkMode()"><span class="toggle-slider"></span></label></div>
+            <div class="settings-toggle-row"><div><p>Dark Mode</p><p>Use dark theme</p></div><label class="toggle"><input type="checkbox" class="dark-mode-setting-toggle" onchange="toggleDarkMode()"><span class="toggle-slider"></span></label></div>
           </div>
 
           <!-- Language & Region -->
           <div class="card">
-            <div style="display:flex;gap:12px;align-items:center;margin-bottom:20px;">
-              <div class="settings-icon-green" style="border-radius:10px;width:40px;height:40px;display:grid;place-items:center;flex-shrink:0;background:var(--accent-light);">
+            <div class="settings-card-header">
+              <div class="settings-icon-badge green">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
               </div>
-              <div><h3 style="font-size:16px;font-weight:600;">Language &amp; Region</h3><p style="font-size:13px;color:var(--text-muted);">Set your preferred language and timezone</p></div>
+              <div><h3>Language &amp; Region</h3><p>Set your preferred language and timezone</p></div>
             </div>
-            <div style="display:flex;flex-direction:column;gap:16px;">
-              <div class="form-group"><label>Language</label><div class="input-wrap" style="padding:0;"><select style="width:100%;border:none;background:transparent;padding:12px 44px;font-size:15px;color:var(--text);outline:none;"><option>English (US)</option><option>English (UK)</option><option>French</option><option>Spanish</option></select></div></div>
-              <div class="form-group"><label>Timezone</label><div class="input-wrap" style="padding:0;"><select style="width:100%;border:none;background:transparent;padding:12px 44px;font-size:15px;color:var(--text);outline:none;"><option>GMT (Greenwich Mean Time)</option><option>WAT (West Africa Time, UTC+1)</option><option>EST (Eastern Standard Time)</option><option>PST (Pacific Standard Time)</option></select></div></div>
+            <div class="settings-section" style="display:flex;flex-direction:column;gap:16px;">
+              <div class="form-group"><label>Language</label><select class="select-input" style="width:100%;"><option>English (US)</option><option>English (UK)</option><option>French</option><option>Spanish</option></select></div>
+              <div class="form-group"><label>Timezone</label><select class="select-input" style="width:100%;"><option>GMT (Greenwich Mean Time)</option><option>WAT (West Africa Time, UTC+1)</option><option>EST (Eastern Standard Time)</option><option>PST (Pacific Standard Time)</option></select></div>
             </div>
           </div>
 
           <!-- Security -->
           <div class="card">
-            <div style="display:flex;gap:12px;align-items:center;margin-bottom:20px;">
-              <div class="settings-icon-red" style="border-radius:10px;width:40px;height:40px;display:grid;place-items:center;flex-shrink:0;background:var(--red-light);">
+            <div class="settings-card-header">
+              <div class="settings-icon-badge red">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
               </div>
-              <div><h3 style="font-size:16px;font-weight:600;">Security</h3><p style="font-size:13px;color:var(--text-muted);">Manage your account security</p></div>
+              <div><h3>Security</h3><p>Manage your account security</p></div>
             </div>
-            <div style="display:flex;flex-direction:column;gap:12px;">
-              <div style="background:var(--bg);border-radius:10px;padding:16px 20px;cursor:pointer;border:1px solid var(--border-light);" onclick="openModal('modal-change-password')"><p style="font-weight:500;font-size:15px;color:var(--text);">Change Password</p><p style="font-size:13px;color:var(--text-muted);">Update your password</p></div>
-              <div style="background:var(--bg);border-radius:10px;padding:16px 20px;cursor:pointer;border:1px solid var(--border-light);display:flex;justify-content:space-between;align-items:center;"><div><p style="font-weight:500;font-size:15px;color:var(--text);">Two-Factor Authentication</p><p style="font-size:13px;color:var(--text-muted);">Add an extra layer of security</p></div><label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label></div>
+            <div class="settings-section" style="display:flex;flex-direction:column;gap:12px;">
+              <div class="settings-sec-item" onclick="openModal('modal-change-password')"><p>Change Password</p><p>Update your password</p></div>
+              <div class="settings-sec-item settings-toggle-row"><div><p>Two-Factor Authentication</p><p>Add an extra layer of security</p></div><label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label></div>
             </div>
           </div>
 
@@ -1655,7 +1746,7 @@
 <!-- ══════════════════════════════════════════════════════ -->
 <!-- TOAST NOTIFICATIONS -->
 <!-- ══════════════════════════════════════════════════════ -->
-<div id="toast" style="display:none;position:fixed;bottom:32px;right:32px;padding:14px 24px;border-radius:var(--radius-sm);box-shadow:var(--shadow-lg);align-items:center;gap:10px;font-weight:500;z-index:9999;font-size:14px;max-width:360px;"></div>
+<div id="toast" role="status" aria-live="polite" style="display:none;position:fixed;bottom:32px;right:32px;padding:14px 24px;border-radius:var(--radius-sm);box-shadow:var(--shadow-lg);align-items:center;gap:10px;font-weight:500;z-index:9999;font-size:14px;max-width:360px;"></div>
 
 
 <!-- ══════════════════════════════════════════════════════ -->
@@ -1710,5 +1801,105 @@
     </div>
   </div>
 </div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- MODAL: CHANGE PROFILE PICTURE -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div id="modal-change-pic" class="modal-overlay" onclick="closeModalOverlay('modal-change-pic')">
+  <div class="modal" onclick="event.stopPropagation()" style="max-width:420px;">
+    <div class="modal-header">
+      <h3>Change Profile Picture</h3>
+      <button class="modal-close" onclick="closeModal('modal-change-pic')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="pic-upload-area" id="pic-upload-area">
+        <input type="file" id="pic-file-input" accept="image/*" hidden>
+        <div class="pic-upload-preview" id="pic-upload-preview">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <p>Click or drag to upload a photo</p>
+          <span>JPG, PNG or GIF — max 5MB</span>
+        </div>
+        <img id="pic-preview-img" class="pic-preview-img" alt="Preview">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="cancelPicUpload()">Cancel</button>
+      <button class="btn btn-primary" id="pic-save-btn" onclick="saveProfilePic()" disabled>Save Photo</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- MODAL: VIEW CLASH DETAIL -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div id="modal-view-clash" class="modal-overlay" onclick="closeModalOverlay('modal-view-clash')">
+  <div class="modal" onclick="event.stopPropagation()" style="max-width:520px;">
+    <div class="modal-header">
+      <h3 id="view-clash-title">Clash Details</h3>
+      <button class="modal-close" onclick="closeModal('modal-view-clash')">&times;</button>
+    </div>
+    <div class="modal-body" id="view-clash-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-view-clash')">Close</button>
+      <button class="btn btn-primary" id="view-clash-resolve-btn" onclick="resolveFromView()">Resolve</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- MODAL: RESOLVE CLASH -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div id="modal-resolve-clash" class="modal-overlay" onclick="closeModalOverlay('modal-resolve-clash')">
+  <div class="modal" onclick="event.stopPropagation()" style="max-width:440px;">
+    <div class="modal-header">
+      <h3>Resolve Clash</h3>
+      <button class="modal-close" onclick="closeModal('modal-resolve-clash')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p id="resolve-clash-desc" style="font-size:15px;color:var(--text-muted);margin-bottom:16px;"></p>
+      <div class="form-group">
+        <label>Resolution Note</label>
+        <div class="input-wrap">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          <input type="text" id="resolve-note" placeholder="How was this clash resolved?">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modal-resolve-clash')">Cancel</button>
+      <button class="btn btn-primary" onclick="confirmResolve()">Resolve</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- MODAL: NOTIFICATION DETAIL -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div id="modal-notif-detail" class="modal-overlay" onclick="closeModalOverlay('modal-notif-detail')">
+  <div class="modal" onclick="event.stopPropagation()" style="max-width:480px;">
+    <div class="modal-header">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div class="notif-icon green" id="notif-modal-icon"></div>
+        <h3 id="notif-modal-title">Notification</h3>
+      </div>
+      <button class="modal-close" onclick="closeModal('modal-notif-detail')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p id="notif-modal-message" style="font-size:15px;line-height:1.65;color:var(--text-muted);"></p>
+      <div id="notif-modal-meta" style="margin-top:16px;display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-lighter);">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span id="notif-modal-time"></span>
+      </div>
+    </div>
+    <div class="modal-footer" id="notif-modal-footer">
+      <button class="btn btn-outline btn-sm" onclick="closeModal('modal-notif-detail')">Close</button>
+      <button class="btn btn-primary btn-sm" id="notif-modal-read-btn" onclick="markReadFromModal()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Mark as Read
+      </button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>

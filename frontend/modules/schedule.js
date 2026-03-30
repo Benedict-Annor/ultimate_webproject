@@ -65,6 +65,7 @@ function loadEditForm(id) {
   const course      = item.offering?.course;
   const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
   const isOwner     = String(item.lecturer?.id) === String(currentUser.id);
+  if (!isOwner) { showToast('You can only edit your own schedule', 'warning'); switchPage('page-timetable'); return; }
   const cancelled   = item.status === 'cancelled';
 
   const setEl = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
@@ -112,6 +113,15 @@ async function saveEdit() {
   const id = localStorage.getItem('editItemId');
   if (!id) return;
 
+  if (id !== 'new') {
+    const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+    const item = timetableData.find(t => String(t.id) === String(id));
+    if (item && String(item.lecturer?.id) !== String(currentUser.id)) {
+      showToast('You can only modify your own schedule', 'error');
+      return;
+    }
+  }
+
   const day       = document.getElementById('edit-day')?.value;
   const from      = document.getElementById('edit-from')?.value?.trim();
   const to        = document.getElementById('edit-to')?.value?.trim();
@@ -121,7 +131,6 @@ async function saveEdit() {
   const clashError  = document.getElementById('edit-clash-error');
   if (clashError) clashError.style.display = 'none';
 
-  // Client-side validation
   if (!from || !to) {
     if (clashError) { clashError.textContent = 'Start time and end time are required.'; clashError.style.display = 'block'; }
     return;
@@ -131,14 +140,17 @@ async function saveEdit() {
     return;
   }
 
+  const btn = document.getElementById('edit-update-btn');
+  setBtnLoading(btn, 'Saving…');
+
   try {
     const dayOfWeek = DAY_NAMES.indexOf(day) + 1 || 1;
     let res;
 
     if (id === 'new') {
       const offeringId = document.getElementById('edit-offering')?.value;
-      if (!offeringId) { if (clashError) { clashError.textContent = 'Please select a course.'; clashError.style.display = 'block'; } return; }
-      if (!roomId)     { if (clashError) { clashError.textContent = 'Please select a room.';   clashError.style.display = 'block'; } return; }
+      if (!offeringId) { if (clashError) { clashError.textContent = 'Please select a course.'; clashError.style.display = 'block'; } resetBtn(btn, 'Save Changes'); return; }
+      if (!roomId)     { if (clashError) { clashError.textContent = 'Please select a room.';   clashError.style.display = 'block'; } resetBtn(btn, 'Save Changes'); return; }
       res = await apiFetch('/timetable', { method: 'POST', body: JSON.stringify({ offering_id: offeringId, room_id: roomId, day_of_week: dayOfWeek, start_time: from, end_time: to, group_number: groupNumber }) });
     } else {
       const patch = { day_of_week: dayOfWeek, start_time: from, end_time: to };
@@ -147,19 +159,22 @@ async function saveEdit() {
       res = await apiFetch(`/timetable/${id}`, { method: 'PUT', body: JSON.stringify(patch) });
     }
 
-    if (!res) return;
+    if (!res) { resetBtn(btn, 'Save Changes'); return; }
     const data = await res.json();
     if (!res.ok) {
       const msg = data.conflicts ? data.conflicts.map(c => c.message).join(' | ') : (data.error || 'Failed to save schedule');
       if (clashError) { clashError.textContent = msg; clashError.style.display = 'block'; }
+      resetBtn(btn, 'Save Changes');
       return;
     }
     showToast(id === 'new' ? 'Class added successfully!' : 'Schedule updated successfully!', 'success');
     await loadTimetable();
+    resetBtn(btn, 'Save Changes');
     setTimeout(() => { switchPage('page-timetable'); }, 800);
   } catch (err) {
     console.error('saveEdit error:', err);
     if (clashError) { clashError.textContent = 'Network error. Please try again.'; clashError.style.display = 'block'; }
+    resetBtn(btn, 'Save Changes');
   }
 }
 
@@ -169,28 +184,54 @@ async function cancelClass() {
   if (!isLecturerUser()) return;
   const id = localStorage.getItem('editItemId');
   if (!id) return;
-  try {
-    const res = await apiFetch(`/timetable/${id}/cancel`, { method: 'PUT' });
-    if (!res) return;
-    if (!res.ok) { const err = await res.json().catch(() => ({})); showToast(err.message || 'Failed to cancel class', 'error'); return; }
-    showToast('Class cancelled', 'success');
-    await loadTimetable();
-    loadEditForm(id);
-  } catch (err) { console.error('cancelClass error:', err); showToast('Error cancelling class', 'error'); }
+  const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+  const item = timetableData.find(t => String(t.id) === String(id));
+  if (item && String(item.lecturer?.id) !== String(currentUser.id)) { showToast('You can only cancel your own classes', 'error'); return; }
+
+  showConfirmDialog(
+    'Cancel Class',
+    'Are you sure you want to cancel this class? All enrolled students will be notified.',
+    async function() {
+      const btn = document.getElementById('edit-cancel-btn');
+      setBtnLoading(btn, 'Cancelling…');
+      try {
+        const res = await apiFetch(`/timetable/${id}/cancel`, { method: 'PUT' });
+        if (!res) { resetBtn(btn, 'Cancel Class'); return; }
+        if (!res.ok) { const err = await res.json().catch(() => ({})); showToast(err.message || 'Failed to cancel class', 'error'); resetBtn(btn, 'Cancel Class'); return; }
+        showToast('Class cancelled', 'success');
+        await loadTimetable();
+        loadEditForm(id);
+      } catch (err) { console.error('cancelClass error:', err); showToast('Error cancelling class', 'error'); }
+      resetBtn(btn, 'Cancel Class');
+    }
+  );
 }
 
 async function restoreClass() {
   if (!isLecturerUser()) return;
   const id = localStorage.getItem('editItemId');
   if (!id) return;
-  try {
-    const res = await apiFetch(`/timetable/${id}/restore`, { method: 'PUT' });
-    if (!res) return;
-    if (!res.ok) { const err = await res.json().catch(() => ({})); showToast(err.message || 'Failed to restore class', 'error'); return; }
-    showToast('Class restored', 'success');
-    await loadTimetable();
-    loadEditForm(id);
-  } catch (err) { console.error('restoreClass error:', err); showToast('Error restoring class', 'error'); }
+  const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+  const item = timetableData.find(t => String(t.id) === String(id));
+  if (item && String(item.lecturer?.id) !== String(currentUser.id)) { showToast('You can only restore your own classes', 'error'); return; }
+
+  showConfirmDialog(
+    'Restore Class',
+    'Are you sure you want to restore this cancelled class?',
+    async function() {
+      const btn = document.getElementById('edit-restore-btn');
+      setBtnLoading(btn, 'Restoring…');
+      try {
+        const res = await apiFetch(`/timetable/${id}/restore`, { method: 'PUT' });
+        if (!res) { resetBtn(btn, 'Restore Class'); return; }
+        if (!res.ok) { const err = await res.json().catch(() => ({})); showToast(err.message || 'Failed to restore class', 'error'); resetBtn(btn, 'Restore Class'); return; }
+        showToast('Class restored', 'success');
+        await loadTimetable();
+        loadEditForm(id);
+      } catch (err) { console.error('restoreClass error:', err); showToast('Error restoring class', 'error'); }
+      resetBtn(btn, 'Restore Class');
+    }
+  );
 }
 
 async function populateRoomsDropdown(selectedRoomId) {
@@ -202,22 +243,37 @@ async function populateRoomsDropdown(selectedRoomId) {
     const rooms = await res.json();
     sel.innerHTML = '<option value="">Select room…</option>' +
       rooms.map(r => `<option value="${r.id}"${r.id === selectedRoomId ? ' selected' : ''}>${escapeHtml(r.name)} — ${escapeHtml(r.building)}</option>`).join('');
-  } catch (err) { console.error('populateRoomsDropdown:', err); }
+  } catch (err) {
+    console.error('populateRoomsDropdown:', err);
+    showToast('Failed to load rooms', 'error');
+  }
 }
 
 async function populateOfferingsDropdown(selectedOfferingId) {
   const sel = document.getElementById('edit-offering');
   if (!sel) return;
   try {
-    const res      = await apiFetch('/offerings');
+    const res = await apiFetch('/offerings?my_courses=true');
     if (!res) return;
     const offerings = await res.json();
+    if (!offerings.length) {
+      sel.innerHTML = '<option value="">No courses assigned to you</option>';
+      const clashError = document.getElementById('edit-clash-error');
+      if (clashError) {
+        clashError.textContent = 'You have no courses assigned. You can only add schedules for courses you teach.';
+        clashError.style.display = 'block';
+      }
+      return;
+    }
     sel.innerHTML = '<option value="">Select course…</option>' +
       offerings.map(o => {
         const c = o.course;
         return `<option value="${o.id}"${o.id === selectedOfferingId ? ' selected' : ''}>${escapeHtml(c?.code || '')} — ${escapeHtml(c?.title || '')}</option>`;
       }).join('');
-  } catch (err) { console.error('populateOfferingsDropdown:', err); }
+  } catch (err) {
+    console.error('populateOfferingsDropdown:', err);
+    showToast('Failed to load courses', 'error');
+  }
 }
 
 async function openAddForm() {

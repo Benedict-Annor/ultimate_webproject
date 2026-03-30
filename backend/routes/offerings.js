@@ -3,9 +3,29 @@ const supabase = require('../supabase');
 const { requireAuth } = require('../middleware/auth');
 
 // GET /api/offerings
-// Returns all course_offerings with course details joined
+// Returns course_offerings with course details joined.
+// ?my_courses=true  → only offerings the authenticated lecturer already teaches
 router.get('/', requireAuth, async (req, res) => {
   try {
+    if (req.query.my_courses === 'true' && req.user.role === 'lecturer') {
+      const { data: myEntries, error: entErr } = await supabase
+        .from('timetable_entries')
+        .select('offering_id')
+        .eq('lecturer_id', req.user.id);
+      if (entErr) throw entErr;
+
+      const offeringIds = [...new Set((myEntries || []).map(e => e.offering_id))];
+      if (!offeringIds.length) return res.json([]);
+
+      const { data, error } = await supabase
+        .from('course_offerings')
+        .select('id, academic_year, semester, course:courses( id, code, title, level, department_id )')
+        .in('id', offeringIds)
+        .order('id');
+      if (error) throw error;
+      return res.json(data);
+    }
+
     let query = supabase
       .from('course_offerings')
       .select('id, academic_year, semester, course:courses( id, code, title, level, department_id )')

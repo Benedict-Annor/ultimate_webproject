@@ -29,3 +29,24 @@ function setRole(el, role) {
   el.parentElement.querySelectorAll('.role-btn').forEach(s => s.classList.remove('active'));
   el.classList.add('active');
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('a.nav-link[onclick]').forEach(function(link) {
+    if (!link.getAttribute('href')) {
+      link.setAttribute('role', 'button');
+      link.setAttribute('tabindex', '0');
+      link.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); link.click(); }
+      });
+    }
+  });
+  document.querySelectorAll('a.sidebar-menu-link[onclick]').forEach(function(link) {
+    if (!link.getAttribute('href')) {
+      link.setAttribute('role', 'button');
+      link.setAttribute('tabindex', '0');
+      link.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); link.click(); }
+      });
+    }
+  });
+});

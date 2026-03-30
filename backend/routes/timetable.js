@@ -138,6 +138,18 @@ router.post('/', requireAuth, requireRole('lecturer'), timetableBodyRules, valid
     day_of_week = Number(day_of_week);
 
     const lecturer_id = req.user.id;
+
+    const { data: existingEntry } = await supabase
+      .from('timetable_entries')
+      .select('id')
+      .eq('lecturer_id', lecturer_id)
+      .eq('offering_id', offering_id)
+      .limit(1)
+      .maybeSingle();
+    if (!existingEntry) {
+      return res.status(403).json({ error: 'You can only add schedules for courses you already teach' });
+    }
+
     const conflicts = await detectClashes(day_of_week, start_time, end_time, room_id, lecturer_id);
     if (conflicts.length > 0)
       return res.status(409).json({ error: 'Schedule conflict detected', conflicts });

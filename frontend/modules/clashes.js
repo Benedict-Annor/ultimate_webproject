@@ -11,6 +11,7 @@ async function loadClashes() {
     renderClashTable(clashesData);
   } catch (err) {
     console.error('loadClashes error:', err);
+    showToast('Failed to load clash reports. Please try again.', 'error');
   }
 }
 
@@ -36,6 +37,11 @@ function renderClashTable(clashes) {
   if (tabs[0]) tabs[0].textContent = `All (${total})`;
   if (tabs[1]) tabs[1].textContent = `Pending (${pending})`;
   if (tabs[2]) tabs[2].textContent = `Resolved (${resolved})`;
+
+  if (!clashes.length) {
+    tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No clashes found. Your schedule is conflict-free!</td></tr>';
+    return;
+  }
 
   tbody.innerHTML = clashes.map(c => {
     const isPending  = c.status !== 'resolved';
@@ -127,6 +133,8 @@ async function confirmResolve() {
   const c = clashesData.find(x => (x.detected_key || x.id) == activeClashKey);
   if (!c) return;
   const resolution_note = document.getElementById('resolve-note').value.trim() || 'Clash resolved.';
+  const btn = document.querySelector('#modal-resolve-clash .btn-primary');
+  setBtnLoading(btn, 'Resolving…');
   try {
     let res;
     if (c.has_report && c.id) {
@@ -137,8 +145,8 @@ async function confirmResolve() {
         body: JSON.stringify({ course_1_code: c.course_1_code, course_2_code: c.course_2_code, day_of_week: c.day_of_week, time_range: c.time_range, resolution_note })
       });
     }
-    if (!res) return;
-    if (!res.ok) { const err = await res.json().catch(() => ({})); showToast(err.message || 'Failed to resolve clash', 'error'); return; }
+    if (!res) { resetBtn(btn, 'Resolve'); return; }
+    if (!res.ok) { const err = await res.json().catch(() => ({})); showToast(err.message || 'Failed to resolve clash', 'error'); resetBtn(btn, 'Resolve'); return; }
     closeModal('modal-resolve-clash');
     showToast('Clash marked as resolved!', 'success');
     await loadClashes();
@@ -146,4 +154,5 @@ async function confirmResolve() {
     console.error('confirmResolve error:', err);
     showToast('Error resolving clash', 'error');
   }
+  resetBtn(btn, 'Resolve');
 }

@@ -21,6 +21,7 @@ async function loadProfile() {
     set('sprofile-enrollment-date',  enrollDate);
   } catch (err) {
     console.error('loadProfile error:', err);
+    showToast('Failed to load profile. Please try again.', 'error');
   }
 }
 
@@ -28,11 +29,15 @@ async function updateProfile() {
   const fullName = (document.getElementById('prof-fullname') || document.getElementById('sprofile-fullname'))?.value?.trim();
   if (!fullName)             { showToast('Full name is required', 'error'); return; }
   if (fullName.length > 100) { showToast('Full name must be 100 characters or fewer', 'warning'); return; }
+
+  const btns = document.querySelectorAll('[onclick="saveProfile()"], [onclick="updateProfile()"]');
+  btns.forEach(b => setBtnLoading(b, 'Saving…'));
+
   try {
     const res  = await apiFetch('/auth/profile', { method: 'PUT', body: JSON.stringify({ full_name: fullName }) });
-    if (!res) return;
+    if (!res) { btns.forEach(b => resetBtn(b, 'Save Changes')); return; }
     const data = await res.json();
-    if (!res.ok) { showToast(data.error || 'Failed to update', 'error'); return; }
+    if (!res.ok) { showToast(data.error || 'Failed to update', 'error'); btns.forEach(b => resetBtn(b, 'Save Changes')); return; }
     const stored = JSON.parse(localStorage.getItem('user') || '{}');
     stored.full_name = data.full_name;
     localStorage.setItem('user', JSON.stringify(stored));
@@ -42,6 +47,7 @@ async function updateProfile() {
     console.error('updateProfile error:', err);
     showToast('Error updating profile', 'error');
   }
+  btns.forEach(b => resetBtn(b, 'Save Changes'));
 }
 
 function saveProfile() { updateProfile(); }

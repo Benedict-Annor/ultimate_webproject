@@ -16,6 +16,7 @@ async function loadTimetable() {
     if (sttDayDiv && sttDayDiv.style.display !== 'none') renderDayView('stt-day-view', false);
   } catch (err) {
     console.error('loadTimetable error:', err);
+    showToast('Failed to load timetable. Please try again.', 'error');
   }
 }
 

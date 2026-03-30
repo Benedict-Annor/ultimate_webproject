@@ -361,6 +361,15 @@ h1,h2,h3,h4,h5 { font-family: 'Inter', sans-serif; font-weight: 700; }
 }
 .sidebar-expand-btn:hover { background: var(--bg); color: var(--text); }
 
+.sidebar-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 199;
+}
+.sidebar-backdrop.active { display: block; }
+
 .sidebar-nav { padding: 16px 12px; flex: 1; }
 .nav-link {
   display: flex; align-items: center; gap: 10px;
@@ -980,12 +989,16 @@ html.dark .stat-card-link:hover {
     grid-template-columns: repeat(2, 1fr);
     gap: 16px;
   }
+  .features-grid { grid-template-columns: repeat(2, 1fr); }
+  .three-col { grid-template-columns: 1fr; }
+  .profile-wrap { grid-template-columns: 1fr; }
 }
 
 /* ── Tablet: portrait (≤ 768px) ── */
 @media (max-width: 768px) {
   :root { --sidebar-w: 0px; }
 
+  /* Sidebar off-canvas */
   .sidebar {
     position: fixed;
     left: 0; top: 0; bottom: 0;
@@ -997,7 +1010,6 @@ html.dark .stat-card-link:hover {
   .sidebar.mobile-open {
     transform: translateX(0);
   }
-
   .sidebar-expand-btn {
     display: flex !important;
     position: fixed;
@@ -1009,6 +1021,7 @@ html.dark .stat-card-link:hover {
     padding: 8px;
   }
 
+  /* Main header */
   .main-header {
     padding: 56px 20px 16px;
     flex-direction: column;
@@ -1016,8 +1029,10 @@ html.dark .stat-card-link:hover {
     gap: 12px;
   }
   .main-header h1 { font-size: 1.35rem; }
+  .header-actions { flex-wrap: wrap; gap: 8px; }
   .main-content { padding: 16px 20px; }
 
+  /* Stats */
   .stats-row,
   #page-student-dashboard .stats-row {
     grid-template-columns: repeat(2, 1fr);
@@ -1025,8 +1040,108 @@ html.dark .stat-card-link:hover {
     margin-bottom: 20px;
   }
 
+  /* Grid layouts */
   .two-col { grid-template-columns: 1fr; }
+  .three-col { grid-template-columns: 1fr; }
   .schedule-list { grid-template-columns: 1fr; }
+  .qa-grid { grid-template-columns: 1fr; }
+  .features-grid { grid-template-columns: 1fr; }
+  .profile-wrap { grid-template-columns: 1fr; }
+  .edit-form-grid { grid-template-columns: 1fr; }
+  .edit-form-grid .span-2 { grid-column: auto; }
+
+  /* Landing: topnav */
+  .topnav { padding: 0 16px; height: 60px; }
+  .brand-info p { display: none; }
+  .nav-actions .btn { padding: 8px 14px; font-size: 13px; }
+
+  /* Landing: hero */
+  .hero { padding: 48px 20px 40px; }
+  .hero p { font-size: 16px; padding: 0 8px; }
+  .hero-btns { flex-direction: column; width: 100%; max-width: 320px; }
+  .hero-btns .btn { width: 100%; justify-content: center; }
+
+  /* Landing: features & CTA */
+  .features { padding: 48px 20px; }
+  .section-title h3 { font-size: 1.5rem; }
+  .section-title p { font-size: 15px; }
+  .feat-card { padding: 24px; }
+  .cta-section { margin: 0 16px 24px; padding: 48px 20px; border-radius: 14px; }
+  .cta-section h3 { font-size: 1.5rem; }
+  .cta-section p { font-size: 16px; }
+
+  /* Landing: footer */
+  .site-footer {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+    padding: 20px;
+  }
+
+  /* Profile page inline form grids */
+  .profile-info-grid { grid-template-columns: 1fr !important; }
+
+  /* Student profile avatar card */
+  .student-avatar-row { flex-direction: column; text-align: center; gap: 16px !important; }
+
+  /* Timetable page tabs */
+  .tt-page-tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; gap: 0; }
+  .tt-page-tab { white-space: nowrap; flex-shrink: 0; padding: 10px 14px; font-size: 13px; }
+  .tt-view-toggle { flex-wrap: wrap; }
+
+  /* Filter tabs (clash reports) */
+  .filter-tabs { flex-wrap: wrap; width: 100%; }
+  .filter-tab { flex: 1; min-width: 0; text-align: center; padding: 9px 12px; }
+
+  /* Edit schedule banner */
+  .edit-course-banner { flex-direction: column; align-items: flex-start; padding: 18px; }
+  .edit-banner-left { flex-wrap: wrap; }
+  .edit-actions { flex-direction: column; width: 100%; }
+  .edit-actions .btn { width: 100%; justify-content: center; }
+  .edit-time-row { flex-direction: column; gap: 8px; }
+
+  /* Clash table responsive */
+  .clash-table { font-size: 13px; }
+  .clash-table th,
+  .clash-table td { padding: 10px 8px; }
+  .action-btns { flex-wrap: wrap; }
+
+  /* Modals */
+  .modal-box { width: calc(100% - 32px); min-width: 0; max-width: 480px; margin: 16px; }
+  .modal { max-width: calc(100% - 32px); margin: 16px; }
+  .modal-header { padding: 16px 18px 14px; }
+  .modal-body { padding: 16px 18px; }
+  .modal-footer { padding: 14px 18px; flex-wrap: wrap; }
+
+  /* Notifications */
+  .notif-item { gap: 10px; }
+  .notif-body p { font-size: 12px; }
+
+  /* Settings */
+  .setting-row { flex-direction: column; align-items: flex-start; gap: 12px; }
+
+  /* Edit class picker */
+  .edit-class-list { grid-template-columns: 1fr; }
+
+  /* Bar chart */
+  .bar-chart { gap: 8px; }
+
+  /* Donut chart */
+  .donut-wrap { flex-direction: column; align-items: flex-start; }
+
+  /* Day view entries */
+  .day-entry { flex-direction: column; gap: 8px; }
+  .day-entry-badges { align-items: flex-start; }
+
+  /* Detail rows in modals */
+  .detail-row { flex-direction: column; gap: 4px; }
+  .detail-row .detail-label { min-width: 0; }
+
+  /* Quick action buttons layout */
+  .qa-btn { padding: 14px; }
+
+  /* Activity items */
+  .activity-time { margin-left: 0; margin-top: 4px; }
 }
 
 /* ── Mobile: small phone (≤ 480px) ── */
@@ -1041,8 +1156,71 @@ html.dark .stat-card-link:hover {
 
   .stat-card { padding: 16px 18px; }
 
+  .main-header { padding: 52px 14px 14px; }
   .main-header h1 { font-size: 1.2rem; }
   .main-header p  { font-size: 13px; }
+
+  /* Landing topnav tighter */
+  .topnav { padding: 0 12px; height: 56px; }
+  .brand-icon { width: 32px; height: 32px; }
+  .brand-info h1 { font-size: 14px; }
+  .nav-actions { gap: 6px; }
+  .nav-actions .btn { padding: 6px 10px; font-size: 12px; }
+  .dark-toggle { width: 32px; height: 32px; }
+
+  /* Hero tighter */
+  .hero { padding: 32px 14px 28px; }
+  .hero h2 { font-size: 1.65rem; }
+  .hero p { font-size: 14px; margin-bottom: 28px; }
+  .hero-badge { font-size: 12px; padding: 5px 12px; margin-bottom: 20px; }
+
+  /* Features */
+  .features { padding: 32px 14px; }
+  .section-title { margin-bottom: 32px; }
+  .section-title h3 { font-size: 1.3rem; }
+  .feat-card { padding: 20px; }
+  .feat-card p { font-size: 14px; }
+
+  /* CTA */
+  .cta-section { margin: 0 12px 16px; padding: 32px 16px; }
+  .cta-section h3 { font-size: 1.3rem; }
+  .cta-section p { font-size: 14px; margin-bottom: 24px; }
+
+  /* Footer */
+  .site-footer { padding: 16px 14px; }
+
+  /* Auth pages */
+  .auth-card { padding: 32px 20px; }
+  .auth-header h1 { font-size: 1.5rem; }
+  .auth-icon { width: 52px; height: 52px; border-radius: 14px; }
+
+  /* Cards */
+  .card { padding: 18px; }
+  .card-header { margin-bottom: 14px; }
+  .card-header h3 { font-size: 15px; }
+
+  /* Schedule items */
+  .schedule-item { padding: 12px; }
+  .schedule-bar { height: 48px; }
+  .schedule-info h4 { font-size: 15px; }
+
+  /* Modals */
+  .modal-box { width: calc(100% - 24px); margin: 12px; padding: 18px; }
+  .event-modal-banner { padding: 20px 18px 18px; }
+  .event-modal-title { font-size: 16px; }
+
+  /* Notifications */
+  .notif-item.unread { margin: 0 -18px; padding: 14px 18px; }
+
+  /* Buttons */
+  .btn { padding: 10px 18px; font-size: 14px; }
+  .btn-sm { padding: 6px 14px; font-size: 13px; }
+
+  /* Sidebar expand btn position */
+  .sidebar-expand-btn { top: 12px; left: 8px; }
+
+  /* Settings items */
+  .settings-section h3 { font-size: 15px; }
 }
 
 /* ══════════════════════════════════════════════════════════

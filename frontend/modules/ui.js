@@ -55,6 +55,14 @@ function toggleSidebar(pageId) {
   if (window.innerWidth <= 768) {
     const isOpen = sidebar.classList.toggle('mobile-open');
     if (expandBtn) expandBtn.style.display = isOpen ? 'none' : 'flex';
+    let backdrop = page.querySelector('.sidebar-backdrop');
+    if (!backdrop) {
+      backdrop = document.createElement('div');
+      backdrop.className = 'sidebar-backdrop';
+      backdrop.onclick = function() { toggleSidebar(pageId); };
+      page.querySelector('.app-layout').insertBefore(backdrop, sidebar.nextSibling);
+    }
+    backdrop.classList.toggle('active', isOpen);
   } else {
     sidebar.classList.toggle('collapsed');
     if (expandBtn) expandBtn.style.display = 'none';
@@ -93,3 +101,17 @@ function togglePw(id) {
   const inp = document.getElementById(id);
   if (inp) inp.type = inp.type === 'password' ? 'text' : 'password';
 }
+
+window.addEventListener('resize', function() {
+  if (window.innerWidth > 768) {
+    document.querySelectorAll('.sidebar.mobile-open').forEach(function(s) {
+      s.classList.remove('mobile-open');
+    });
+    document.querySelectorAll('.sidebar-backdrop.active').forEach(function(b) {
+      b.classList.remove('active');
+    });
+    document.querySelectorAll('.sidebar-expand-btn').forEach(function(btn) {
+      btn.style.display = 'none';
+    });
+  }
+});

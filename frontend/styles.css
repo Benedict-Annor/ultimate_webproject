@@ -320,9 +320,10 @@ h1,h2,h3,h4,h5 { font-family: 'Inter', sans-serif; font-weight: 700; }
 .sidebar.collapsed {
   width: 64px; min-width: 64px; overflow: hidden;
 }
+.sidebar.collapsed .brand { display: none; }
 .sidebar.collapsed .brand-info { display: none; }
 .sidebar.collapsed .sidebar-brand {
-  padding: 16px 8px; justify-content: center; gap: 6px;
+  padding: 12px 8px; justify-content: center; gap: 0;
 }
 .sidebar.collapsed .sidebar-collapse-btn svg {
   transform: rotate(180deg);
@@ -330,9 +331,9 @@ h1,h2,h3,h4,h5 { font-family: 'Inter', sans-serif; font-weight: 700; }
 .sidebar.collapsed .sidebar-nav { padding: 12px 8px; }
 .sidebar.collapsed .nav-link {
   padding: 10px; justify-content: center; gap: 0; font-size: 0;
-  overflow: hidden;
+  overflow: hidden; white-space: nowrap;
 }
-.sidebar.collapsed .nav-link svg { flex-shrink: 0; }
+.sidebar.collapsed .nav-link svg { flex-shrink: 0; width: 18px; height: 18px; }
 .sidebar.collapsed .nav-badge { display: none; }
 .sidebar.collapsed .user-info { display: none; }
 .sidebar.collapsed .user-card { justify-content: center; padding: 10px; }

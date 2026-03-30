@@ -20,6 +20,25 @@ async function loadTimetable() {
   }
 }
 
+function _buildCourseColorMap(entries) {
+  const palette = ['green', 'blue', 'amber', 'purple', 'teal', 'red', 'pink'];
+  const map = {};
+  var idx = 0;
+  entries.forEach(e => {
+    const key = e.offering?.course?.code || e.offering?.course?.title || '';
+    if (key && !map[key]) {
+      map[key] = palette[idx % palette.length];
+      idx++;
+    }
+  });
+  return map;
+}
+
+function _getCourseColor(entry, colorMap) {
+  var key = entry.offering?.course?.code || entry.offering?.course?.title || '';
+  return colorMap[key] || 'green';
+}
+
 function renderTimetable(containerId, isLecturer) {
   const container = document.getElementById(containerId);
   if (!container) return;
@@ -28,45 +47,63 @@ function renderTimetable(containerId, isLecturer) {
 
   const timeSet = new Set();
   entries.forEach(e => { if (e.start_time) timeSet.add(e.start_time.substring(0, 5)); });
-  const times  = Array.from(timeSet).sort();
-  const colors = ['green', 'blue', 'amber', 'red', 'teal', 'purple'];
+  const times    = Array.from(timeSet).sort();
+  const colorMap = _buildCourseColorMap(entries);
 
   let html = `<div style="overflow-x:auto;"><table class="tt-grid"><thead><tr>
-    <th>Time</th>
-    ${DAY_NAMES.map(d => `<th>${d}</th>`).join('')}
+    <th>Day</th>
+    ${times.map(t => `<th>${t}</th>`).join('')}
   </tr></thead><tbody>`;
 
-  times.forEach(time => {
-    html += '<tr><td class="tt-time">' + time + '</td>';
-    DAY_NAMES.forEach(day => {
-      const match = entries.find(e => {
+  DAY_NAMES.forEach((day, dayIdx) => {
+    const rowClass = dayIdx % 2 === 0 ? 'tt-row-even' : 'tt-row-odd';
+    html += '<tr class="' + rowClass + '"><td class="tt-day-label">' + day + '</td>';
+    times.forEach(time => {
+      const matches = entries.filter(e => {
         const entryDay  = e.day || DAY_NAMES[(e.day_of_week || 1) - 1];
         const entryTime = e.start_time ? e.start_time.substring(0, 5) : '';
         return entryDay === day && entryTime === time;
       });
-      if (match) {
-        const course      = match.offering?.course;
-        const colorClass  = colors[Math.abs((course?.code || '').charCodeAt(0) || 0) % colors.length];
-        const cancelled   = match.status === 'cancelled';
-        const groupBadge  = match.group_number === 1 ? '<span class="tt-group-badge">G1</span>'
-                          : match.group_number === 2 ? '<span class="tt-group-badge grp2">G2</span>'
-                          : '<span class="tt-group-badge both">Both</span>';
-        const cancelBadge = cancelled ? '<span class="tt-cancelled-badge">Cancelled</span>' : '';
-        html += `<td class="tt-cell" style="padding:8px;vertical-align:top;">
-          <div class="tt-event ${colorClass}${cancelled ? ' cancelled' : ''}" onclick="openEventModal('${match.id}')">
+      if (matches.length) {
+        html += '<td class="tt-cell" style="padding:8px;vertical-align:top;">';
+        matches.forEach(match => {
+          const course      = match.offering?.course;
+          const colorClass  = _getCourseColor(match, colorMap);
+          const cancelled   = match.status === 'cancelled';
+          const groupBadge  = match.group_number === 1 ? '<span class="tt-group-badge">G1</span>'
+                            : match.group_number === 2 ? '<span class="tt-group-badge grp2">G2</span>'
+                            : '<span class="tt-group-badge both">Both</span>';
+          const cancelBadge = cancelled ? '<span class="tt-cancelled-badge">Cancelled</span>' : '';
+          html += `<div class="tt-event ${colorClass}${cancelled ? ' cancelled' : ''}" onclick="openEventModal('${match.id}')" style="margin-bottom:4px;">
             <strong>${escapeHtml(course?.title || 'Unknown')}</strong>
             <span>${escapeHtml(course?.code || '')}</span>
             <span>${escapeHtml(match.room?.name || '')}</span>
             <span>${match.start_time ? match.start_time.substring(0,5) : ''} – ${match.end_time ? match.end_time.substring(0,5) : ''}</span>
             <div style="margin-top:4px;display:flex;gap:4px;flex-wrap:wrap;">${groupBadge}${cancelBadge}</div>
-          </div></td>`;
+          </div>`;
+        });
+        html += '</td>';
       } else {
         html += '<td class="tt-cell" style="padding:8px;vertical-align:top;"></td>';
       }
     });
     html += '</tr>';
   });
-  html += '</tbody></table></div>';
+
+  // Color legend
+  var legendKeys = Object.keys(colorMap);
+  if (legendKeys.length) {
+    html += '</tbody></table></div>';
+    html += '<div class="tt-legend">';
+    legendKeys.forEach(key => {
+      var c = colorMap[key];
+      html += '<div class="tt-legend-item"><span class="tt-legend-dot ' + c + '"></span>' + escapeHtml(key) + '</div>';
+    });
+    html += '</div>';
+  } else {
+    html += '</tbody></table></div>';
+  }
+
   container.innerHTML = html;
 }
 
@@ -93,6 +130,7 @@ function renderDayView(containerId, isLecturer) {
   const entries = timetableData;
   if (!entries.length) { container.innerHTML = '<p style="padding:20px;color:var(--text-muted)">No classes scheduled.</p>'; return; }
 
+  const colorMap = _buildCourseColorMap(entries);
   const byDay = {};
   DAY_NAMES.forEach(d => { byDay[d] = []; });
   entries.forEach(e => { const d = e.day || DAY_NAMES[(e.day_of_week || 1) - 1]; if (d) (byDay[d] = byDay[d] || []).push(e); });
@@ -102,12 +140,13 @@ function renderDayView(containerId, isLecturer) {
     if (!dayEntries.length) return '';
     const cards = dayEntries.map(e => {
       const course     = e.offering?.course;
+      const colorClass = _getCourseColor(e, colorMap);
       const cancelled  = e.status === 'cancelled';
       const groupBadge = e.group_number === 1 ? '<span class="tt-group-badge">G1</span>'
                        : e.group_number === 2 ? '<span class="tt-group-badge grp2">G2</span>'
                        : '<span class="tt-group-badge both">Both</span>';
       const cancelBadge = cancelled ? '<span class="tt-cancelled-badge">Cancelled</span>' : '';
-      return `<div class="day-entry${cancelled ? ' cancelled' : ''}" onclick="openEventModal('${e.id}')">
+      return `<div class="day-entry day-entry-color-${colorClass}${cancelled ? ' cancelled' : ''}" onclick="openEventModal('${e.id}')">
         <div class="day-entry-time">${e.start_time ? e.start_time.substring(0,5) : ''} – ${e.end_time ? e.end_time.substring(0,5) : ''}</div>
         <div class="day-entry-info">
           <div class="day-entry-course">${escapeHtml(course?.title || 'Unknown')}</div>
@@ -150,8 +189,8 @@ function openEventModal(id) {
   const startTime = entry.start_time ? entry.start_time.substring(0, 5) : '';
   const endTime   = entry.end_time   ? entry.end_time.substring(0, 5) : '';
   const cancelled = entry.status === 'cancelled';
-  const colors    = ['green', 'blue', 'amber', 'red', 'teal', 'purple'];
-  const colorClass = colors[Math.abs((course?.code || '').charCodeAt(0) || 0) % colors.length];
+  const colorMap   = _buildCourseColorMap(timetableData);
+  const colorClass = _getCourseColor(entry, colorMap);
   const bannerGradients = {
     green:'linear-gradient(135deg,#00a63e,#22c55e)', blue:'linear-gradient(135deg,#2b7fff,#60a5fa)',
     amber:'linear-gradient(135deg,#e17100,#f59e0b)', red:'linear-gradient(135deg,#e7000b,#f87171)',

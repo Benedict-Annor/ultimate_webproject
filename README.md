@@ -12,6 +12,8 @@ A full-stack academic scheduling system for Kwame Nkrumah University of Science 
 - **Notifications** — students are notified when schedules change
 - **Dark mode** — persisted per user preference
 - **Responsive UI** — works on desktop, tablet, and mobile
+- **Sidebar** — collapsible rail on desktop; off-canvas drawer on small screens (hamburger to open, **X** to close when expanded)
+- **Profile photo** — upload a picture in Profile (stored in the browser); tap the avatar on the profile page to view it full size
 
 ---
 
@@ -141,7 +143,7 @@ ultimatewebproject/
     ├── script.js               # App init & session restore
     ├── modules/
     │   ├── globals.js          # Shared state & utilities
-    │   ├── ui.js               # Dark mode, toasts, modals
+    │   ├── ui.js               # Dark mode, sidebar, toasts, modals, profile photo
     │   ├── auth.js             # Sign in/out, user UI
     │   ├── navigation.js       # Page routing
     │   ├── timetable.js        # Timetable render & event modal

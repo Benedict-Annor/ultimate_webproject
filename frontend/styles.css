@@ -183,6 +183,18 @@ h1,h2,h3,h4,h5 { font-family: 'Inter', sans-serif; font-weight: 700; }
 .btn-ghost:hover { background: var(--bg-hover); }
 .btn-danger { background: var(--red); color: #fff; }
 .btn-danger:hover { background: var(--red-hover); }
+.btn-restore-class {
+  background: var(--teal);
+  color: #fff;
+  border: 1px solid transparent;
+}
+.btn-restore-class:hover {
+  background: #0d9668;
+  color: #fff;
+}
+html.dark .btn-restore-class:hover {
+  background: #14b8a6;
+}
 .btn-sm { padding: 7px 17px; font-size: 14px; border-radius: var(--radius-sm); }
 
 /* ── NAV BAR (landing) ── */

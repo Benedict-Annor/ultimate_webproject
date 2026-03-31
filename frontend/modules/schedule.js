@@ -98,14 +98,50 @@ function loadEditForm(id) {
   populateRoomsDropdown(item.room?.id);
 
   ['edit-room-id','edit-group','edit-day','edit-from','edit-to'].forEach(elId => { const el = document.getElementById(elId); if (el) el.disabled = !isOwner; });
-  ['edit-update-btn','edit-cancel-btn'].forEach(elId => { const el = document.getElementById(elId); if (el) el.style.display = isOwner ? 'inline-flex' : 'none'; });
+  ['edit-update-btn'].forEach(elId => { const el = document.getElementById(elId); if (el) el.style.display = isOwner ? 'inline-flex' : 'none'; });
+  syncCancelRestoreButton();
 
-  const restoreBtn = document.getElementById('edit-restore-btn');
-  if (restoreBtn) restoreBtn.style.display = (isOwner && cancelled) ? 'inline-flex' : 'none';
   const clashError = document.getElementById('edit-clash-error');
   if (clashError) clashError.style.display = 'none';
 
   localStorage.setItem('editItemId', entryId);
+}
+
+/** Single button toggles between Cancel Class and Restore Class from entry status. */
+function syncCancelRestoreButton() {
+  const btn = document.getElementById('edit-cancel-restore-btn');
+  if (!btn) return;
+  const id = localStorage.getItem('editItemId');
+  if (!id || id === 'new') {
+    btn.style.display = 'none';
+    return;
+  }
+  const item = timetableData.find(t => String(t.id) === String(id));
+  if (!item) {
+    btn.style.display = 'none';
+    return;
+  }
+  const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+  const isOwner = String(item.lecturer?.id) === String(currentUser.id);
+  if (!isOwner) {
+    btn.style.display = 'none';
+    return;
+  }
+  const cancelled = item.status === 'cancelled';
+  btn.style.display = 'inline-flex';
+  btn.disabled = false;
+  btn.className = cancelled ? 'btn btn-sm btn-restore-class' : 'btn btn-danger btn-sm';
+  btn.innerHTML = cancelled
+    ? '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg> Restore Class'
+    : '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Cancel Class';
+}
+
+function cancelOrRestoreClass() {
+  const id = localStorage.getItem('editItemId');
+  if (!id) return;
+  const item = timetableData.find(t => String(t.id) === String(id));
+  if (item && item.status === 'cancelled') restoreClass();
+  else cancelClass();
 }
 
 async function saveEdit() {
@@ -192,17 +228,16 @@ async function cancelClass() {
     'Cancel Class',
     'Are you sure you want to cancel this class? All enrolled students will be notified.',
     async function() {
-      const btn = document.getElementById('edit-cancel-btn');
+      const btn = document.getElementById('edit-cancel-restore-btn');
       setBtnLoading(btn, 'Cancelling…');
       try {
         const res = await apiFetch(`/timetable/${id}/cancel`, { method: 'PUT' });
-        if (!res) { resetBtn(btn, 'Cancel Class'); return; }
-        if (!res.ok) { const err = await res.json().catch(() => ({})); showToast(err.message || 'Failed to cancel class', 'error'); resetBtn(btn, 'Cancel Class'); return; }
+        if (!res) { syncCancelRestoreButton(); return; }
+        if (!res.ok) { const err = await res.json().catch(() => ({})); showToast(err.message || 'Failed to cancel class', 'error'); syncCancelRestoreButton(); return; }
         showToast('Class cancelled', 'success');
         await loadTimetable();
         loadEditForm(id);
-      } catch (err) { console.error('cancelClass error:', err); showToast('Error cancelling class', 'error'); }
-      resetBtn(btn, 'Cancel Class');
+      } catch (err) { console.error('cancelClass error:', err); showToast('Error cancelling class', 'error'); syncCancelRestoreButton(); }
     }
   );
 }
@@ -219,17 +254,16 @@ async function restoreClass() {
     'Restore Class',
     'Are you sure you want to restore this cancelled class?',
     async function() {
-      const btn = document.getElementById('edit-restore-btn');
+      const btn = document.getElementById('edit-cancel-restore-btn');
       setBtnLoading(btn, 'Restoring…');
       try {
         const res = await apiFetch(`/timetable/${id}/restore`, { method: 'PUT' });
-        if (!res) { resetBtn(btn, 'Restore Class'); return; }
-        if (!res.ok) { const err = await res.json().catch(() => ({})); showToast(err.message || 'Failed to restore class', 'error'); resetBtn(btn, 'Restore Class'); return; }
+        if (!res) { syncCancelRestoreButton(); return; }
+        if (!res.ok) { const err = await res.json().catch(() => ({})); showToast(err.message || 'Failed to restore class', 'error'); syncCancelRestoreButton(); return; }
         showToast('Class restored', 'success');
         await loadTimetable();
         loadEditForm(id);
-      } catch (err) { console.error('restoreClass error:', err); showToast('Error restoring class', 'error'); }
-      resetBtn(btn, 'Restore Class');
+      } catch (err) { console.error('restoreClass error:', err); showToast('Error restoring class', 'error'); syncCancelRestoreButton(); }
     }
   );
 }
@@ -289,10 +323,8 @@ async function openAddForm() {
   ['edit-from','edit-to'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
   const dayEl   = document.getElementById('edit-day');   if (dayEl)   dayEl.value   = 'Monday';
   const groupEl = document.getElementById('edit-group'); if (groupEl) groupEl.value = '';
-  const restoreBtn = document.getElementById('edit-restore-btn');
-  const cancelBtn  = document.getElementById('edit-cancel-btn');
-  if (restoreBtn) restoreBtn.style.display = 'none';
-  if (cancelBtn)  cancelBtn.style.display  = 'none';
+  const cancelRestoreBtn = document.getElementById('edit-cancel-restore-btn');
+  if (cancelRestoreBtn) cancelRestoreBtn.style.display = 'none';
   const clashError = document.getElementById('edit-clash-error');
   if (clashError) clashError.style.display = 'none';
   const user = JSON.parse(localStorage.getItem('user') || '{}');

@@ -51,14 +51,19 @@ function renderNotifInto(list) {
     return;
   }
   list.innerHTML = notificationsData.map((n, i) => `
-    <div class="notif-item${n.is_read ? '' : ' unread'}" onclick="openNotifDetail(${i})" style="cursor:pointer;">
-      <div class="notif-icon ${notifIconColor(n.type)}">${notifTypeIcon(n.type)}</div>
-      <div class="notif-body">
-        <h4>${escapeHtml(n.title || 'Notification')}</h4>
-        <p>${escapeHtml(n.message || '')}</p>
+    <div class="notif-item${n.is_read ? '' : ' unread'}">
+      <div class="notif-clickable" onclick="openNotifDetail(${i})">
+        <div class="notif-icon ${notifIconColor(n.type)}">${notifTypeIcon(n.type)}</div>
+        <div class="notif-body">
+          <h4>${escapeHtml(n.title || 'Notification')}</h4>
+          <p>${escapeHtml(n.message || '')}</p>
+        </div>
+        <div class="notif-time">${timeAgo(n.created_at)}</div>
+        ${n.is_read ? '' : '<div class="notif-dot"></div>'}
       </div>
-      <div class="notif-time">${timeAgo(n.created_at)}</div>
-      ${n.is_read ? '' : '<div class="notif-dot"></div>'}
+      <button class="notif-delete-btn" onclick="deleteNotification('${n.id}')" title="Delete notification">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+      </button>
     </div>`).join('');
 }
 
@@ -102,4 +107,46 @@ async function markAllRead() {
   const res = await apiFetch('/notifications/read-all', { method: 'PUT' });
   if (res) await loadNotifications();
   btns.forEach(b => resetBtn(b, 'Mark All Read'));
+}
+
+async function deleteNotification(id) {
+  const res = await apiFetch('/notifications/' + id, { method: 'DELETE' });
+  if (res) {
+    await loadNotifications();
+    showToast('Notification deleted', 'success');
+  }
+}
+
+async function deleteFromModal() {
+  if (!_activeNotifId) return;
+  var btn = document.getElementById('notif-modal-delete-btn');
+  setBtnLoading(btn, 'Deleting…');
+  const res = await apiFetch('/notifications/' + _activeNotifId, { method: 'DELETE' });
+  resetBtn(btn, 'Delete');
+  if (res) {
+    closeModal('modal-notif-detail');
+    await loadNotifications();
+    showToast('Notification deleted', 'success');
+  }
+}
+
+async function clearAllNotifications() {
+  if (!notificationsData.length) {
+    showToast('No notifications to clear', 'info');
+    return;
+  }
+  showConfirmDialog(
+    'Clear All Notifications',
+    'Are you sure you want to delete all your notifications? This cannot be undone.',
+    async function() {
+      var btns = document.querySelectorAll('[onclick="clearAllNotifications()"]');
+      btns.forEach(function(b) { setBtnLoading(b, 'Clearing…'); });
+      var res = await apiFetch('/notifications', { method: 'DELETE' });
+      if (res) {
+        await loadNotifications();
+        showToast('All notifications cleared', 'success');
+      }
+      btns.forEach(function(b) { resetBtn(b, 'Clear all'); });
+    }
+  );
 }

@@ -53,4 +53,33 @@ router.put('/:id/read', requireAuth, async (req, res) => {
   }
 });
 
+// DELETE /api/notifications  (clear all for current user)
+router.delete('/', requireAuth, async (req, res) => {
+  try {
+    const { error } = await supabase
+      .from('notifications')
+      .delete()
+      .eq('user_id', req.user.id);
+    if (error) throw error;
+    res.json({ message: 'All notifications cleared' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// DELETE /api/notifications/:id
+router.delete('/:id', requireAuth, async (req, res) => {
+  try {
+    const { error } = await supabase
+      .from('notifications')
+      .delete()
+      .eq('id', req.params.id)
+      .eq('user_id', req.user.id);
+    if (error) throw error;
+    res.json({ message: 'Notification deleted' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 module.exports = router;

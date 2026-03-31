@@ -483,6 +483,21 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
+// ── Feature Card Detail (Landing Page) ──
+function openFeatureCard(cardEl) {
+  if (!cardEl) return;
+  var icon = cardEl.querySelector('.feat-icon');
+  var title = cardEl.querySelector('h4');
+  var desc = cardEl.querySelector('p');
+  var modalIcon = document.getElementById('feat-modal-icon');
+  var modalTitle = document.getElementById('feat-modal-title');
+  var modalDesc = document.getElementById('feat-modal-desc');
+  if (modalIcon && icon) modalIcon.innerHTML = icon.innerHTML;
+  if (modalTitle && title) modalTitle.textContent = title.textContent;
+  if (modalDesc && desc) modalDesc.textContent = desc.textContent;
+  openModal('modal-feature');
+}
+
 window.addEventListener('resize', function() {
   if (window.innerWidth > 768) {
     document.querySelectorAll('.sidebar.mobile-open').forEach(function(s) {

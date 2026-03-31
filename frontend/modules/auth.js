@@ -76,9 +76,6 @@ async function signIn() {
   }
 }
 
-function signUp() {
-  showToast('Accounts are pre-provisioned. Please contact the administrator for access.', 'info');
-}
 
 function loadUserUI() {
   const user = JSON.parse(localStorage.getItem('user'));

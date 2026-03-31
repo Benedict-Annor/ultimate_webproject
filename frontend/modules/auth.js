@@ -6,6 +6,13 @@ function getToken()      { return localStorage.getItem('token'); }
 function authHeaders()   { return { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + getToken() }; }
 function isLecturerUser(){ const u = JSON.parse(localStorage.getItem('user')); return u?.role === 'lecturer'; }
 
+/** UI label for account role (lecturer is always lowercase). */
+function formatRoleDisplay(role) {
+  if (!role) return 'User';
+  if (role === 'lecturer') return 'lecturer';
+  return role.charAt(0).toUpperCase() + role.slice(1);
+}
+
 async function apiFetch(path, opts = {}) {
   const res = await fetch(API + path, { ...opts, headers: { ...authHeaders(), ...(opts.headers || {}) } });
   if (res.status === 401) {
@@ -78,16 +85,16 @@ function loadUserUI() {
   if (!user || !user.full_name) return;
 
   const fullName = user.full_name || 'User';
-  const role     = user.role ? (user.role.charAt(0).toUpperCase() + user.role.slice(1)) : 'User';
+  const role     = formatRoleDisplay(user.role);
   const initials = fullName.split(' ').filter(Boolean).map(n => n[0]).join('').toUpperCase();
   const update   = (sel, val) => document.querySelectorAll(sel).forEach(el => { el.textContent = val; });
 
   update('.user-info p:first-child', fullName);
   update('.user-info p:last-child', role);
-  update('.avatar', initials);
-  update('.big-avatar', initials);
+  syncProfileAvatarUI(user, initials);
   update('.profile-name', fullName);
-  update('.profile-role', role);
+  document.querySelectorAll('p.profile-role').forEach(el => { el.textContent = role; });
+  document.querySelectorAll('input.profile-role').forEach(el => { el.value = role; });
   update('.welcome-text', `Welcome back, ${fullName.split(' ')[0] || fullName}!`);
 
   document.querySelectorAll('.profile-fullname').forEach(el => { el.value = user.full_name || ''; });

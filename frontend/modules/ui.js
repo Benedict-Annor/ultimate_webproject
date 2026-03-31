@@ -40,10 +40,11 @@ async function submitChangePassword() {
     const data = await res.json();
     if (!res.ok) { showToast(data.error || 'Failed to update password', 'error'); resetBtn(btn, 'Update Password'); return; }
     showToast('Password updated successfully', 'success');
-    closeModal('modal-change-password');
-    document.getElementById('cp-current').value = '';
-    document.getElementById('cp-new').value = '';
-    document.getElementById('cp-confirm').value = '';
+    ['cp-current', 'cp-new', 'cp-confirm'].forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+    closeChangePasswordModal();
   } catch (err) {
     showToast('Server error. Please try again.', 'error');
   }
@@ -134,8 +135,22 @@ function closeModal(id) {
   _releaseFocus();
 }
 
-function closeModalOverlay(id) { closeModal(id); }
-function closeAllModals() { document.querySelectorAll('.modal-overlay.active').forEach(m => { m.classList.remove('active'); }); _focusTrapStack = []; }
+function closeChangePasswordModal() {
+  ['cp-current', 'cp-new', 'cp-confirm'].forEach(resetPasswordFieldVisibility);
+  closeModal('modal-change-password');
+}
+
+function closeModalOverlay(id) {
+  if (id === 'modal-change-password') closeChangePasswordModal();
+  else closeModal(id);
+}
+function closeAllModals() {
+  document.querySelectorAll('.modal-overlay.active').forEach(function(m) {
+    if (m.id === 'modal-change-password') ['cp-current', 'cp-new', 'cp-confirm'].forEach(resetPasswordFieldVisibility);
+    m.classList.remove('active');
+  });
+  _focusTrapStack = [];
+}
 
 function _trapFocus(modal) {
   const focusable = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
@@ -175,9 +190,43 @@ function toggleDropdown(id) {
 function closeDropdown(id)    { const el = document.getElementById(id); if (el) el.classList.remove('active'); }
 function closeAllDropdowns()  { document.querySelectorAll('.dropdown-menu.active').forEach(m => m.classList.remove('active')); }
 
-function togglePw(id) {
-  const inp = document.getElementById(id);
-  if (inp) inp.type = inp.type === 'password' ? 'text' : 'password';
+function togglePw(inputId) {
+  const inp = document.getElementById(inputId);
+  if (!inp) return;
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+  const wrap = inp.closest('.input-wrap');
+  const btn = wrap && wrap.querySelector('.eye-btn');
+  const visible = inp.type === 'text';
+  if (btn) {
+    btn.setAttribute('aria-label', visible ? 'Hide password' : 'Show password');
+    btn.setAttribute('title', visible ? 'Hide password' : 'Show password');
+    btn.setAttribute('aria-pressed', visible ? 'true' : 'false');
+    const open = btn.querySelector('.eye-icon-open');
+    const closed = btn.querySelector('.eye-icon-closed');
+    if (open && closed) {
+      open.style.display = visible ? 'none' : '';
+      closed.style.display = visible ? '' : 'none';
+    }
+  }
+}
+
+function resetPasswordFieldVisibility(inputId) {
+  const inp = document.getElementById(inputId);
+  if (!inp || inp.type !== 'text') return;
+  inp.type = 'password';
+  const wrap = inp.closest('.input-wrap');
+  const btn = wrap && wrap.querySelector('.eye-btn');
+  if (btn) {
+    btn.setAttribute('aria-label', 'Show password');
+    btn.setAttribute('title', 'Show password');
+    btn.setAttribute('aria-pressed', 'false');
+    const open = btn.querySelector('.eye-icon-open');
+    const closed = btn.querySelector('.eye-icon-closed');
+    if (open && closed) {
+      open.style.display = '';
+      closed.style.display = 'none';
+    }
+  }
 }
 
 function toggleLogoutBtn(cardEl) {
@@ -247,7 +296,115 @@ function showConfirmDialog(title, message, onConfirm) {
   openModal(modalId);
 }
 
-// ── Profile Picture Upload ──
+// ── Profile Picture Upload (per-user in localStorage) ──
+function profileAvatarStorageKey(userId) {
+  return 'profileAvatar:' + String(userId);
+}
+
+function applyProfileAvatarDataUrl(dataUrl) {
+  if (!dataUrl || !dataUrl.startsWith('data:image')) return;
+  document.querySelectorAll('.avatar').forEach(function(el) {
+    el.innerHTML = '';
+    el.style.backgroundImage = 'url(' + dataUrl + ')';
+    el.style.backgroundSize = 'cover';
+    el.style.backgroundPosition = 'center';
+  });
+  document.querySelectorAll('.big-avatar').forEach(function(el) {
+    el.innerHTML = '';
+    el.style.backgroundImage = 'url(' + dataUrl + ')';
+    el.style.backgroundSize = 'cover';
+    el.style.backgroundPosition = 'center';
+  });
+  document.querySelectorAll('.student-profile-avatar').forEach(function(el) {
+    el.innerHTML = '';
+    el.style.backgroundImage = 'url(' + dataUrl + ')';
+    el.style.backgroundSize = 'cover';
+    el.style.backgroundPosition = 'center';
+  });
+}
+
+/** Restore initials / default avatar when this user has no saved photo. */
+function resetProfileAvatarElements(initials) {
+  var mark = initials || '';
+  document.querySelectorAll('.avatar').forEach(function(el) {
+    el.style.backgroundImage = '';
+    el.style.backgroundSize = '';
+    el.style.backgroundPosition = '';
+    el.textContent = mark;
+  });
+  document.querySelectorAll('.big-avatar').forEach(function(el) {
+    el.style.backgroundImage = '';
+    el.style.backgroundSize = '';
+    el.style.backgroundPosition = '';
+    el.textContent = mark;
+  });
+  document.querySelectorAll('.student-profile-avatar').forEach(function(el) {
+    el.style.backgroundImage = '';
+    el.style.backgroundSize = '';
+    el.style.backgroundPosition = '';
+    el.innerHTML = '';
+    el.textContent = mark;
+  });
+}
+
+function syncProfileAvatarUI(user, initials) {
+  if (!user || user.id == null) return;
+  var stored = localStorage.getItem(profileAvatarStorageKey(user.id));
+  if (stored && stored.startsWith('data:image')) {
+    applyProfileAvatarDataUrl(stored);
+  } else {
+    resetProfileAvatarElements(initials);
+  }
+}
+
+function initialsFromUser(user) {
+  if (!user || !user.full_name) return '';
+  return user.full_name.split(' ').filter(Boolean).map(function(n) { return n[0]; }).join('').toUpperCase().substring(0, 2);
+}
+
+function getProfilePhotoDataUrl() {
+  var user = JSON.parse(localStorage.getItem('user') || 'null');
+  if (!user || user.id == null) return '';
+  var s = localStorage.getItem(profileAvatarStorageKey(user.id));
+  if (s && s.startsWith('data:image')) return s;
+  return '';
+}
+
+function openProfilePhotoViewer() {
+  var dataUrl = getProfilePhotoDataUrl();
+  var img = document.getElementById('profile-photo-viewer-img');
+  var ph = document.getElementById('profile-photo-viewer-placeholder');
+  var initialsEl = document.getElementById('profile-photo-viewer-initials');
+  var hint = document.getElementById('profile-photo-viewer-hint');
+  var user = JSON.parse(localStorage.getItem('user') || 'null');
+  var initials = initialsFromUser(user);
+  if (!initials) {
+    var el = document.querySelector('#page-profile .big-avatar, #page-student-profile .student-profile-avatar');
+    if (!el) el = document.querySelector('.big-avatar, .student-profile-avatar');
+    if (el) {
+      var raw = (el.textContent || '').trim();
+      initials = raw.replace(/\s+/g, '').substring(0, 2).toUpperCase();
+    }
+  }
+  if (!initials) initials = '?';
+
+  if (img && ph && initialsEl) {
+    if (dataUrl) {
+      img.src = dataUrl;
+      img.style.display = 'block';
+      ph.hidden = true;
+      if (hint) hint.hidden = true;
+    } else {
+      img.removeAttribute('src');
+      img.style.display = 'none';
+      initialsEl.textContent = initials;
+      ph.hidden = false;
+      if (hint) hint.hidden = false;
+    }
+  }
+  openModal('modal-view-profile-pic');
+}
+
 function openPicUpload() {
   cancelPicUpload();
   openModal('modal-change-pic');
@@ -285,28 +442,27 @@ function saveProfilePic() {
   var img = document.getElementById('pic-preview-img');
   if (!img || !img.src) return;
   var dataUrl = img.src;
-  document.querySelectorAll('.big-avatar').forEach(function(el) {
-    el.innerHTML = '';
-    el.style.backgroundImage = 'url(' + dataUrl + ')';
-    el.style.backgroundSize = 'cover';
-    el.style.backgroundPosition = 'center';
-  });
-  document.querySelectorAll('.avatar').forEach(function(el) {
-    el.innerHTML = '';
-    el.style.backgroundImage = 'url(' + dataUrl + ')';
-    el.style.backgroundSize = 'cover';
-    el.style.backgroundPosition = 'center';
-  });
-  var studentAvatarIcon = document.querySelector('.student-avatar-row > div:first-child');
-  if (studentAvatarIcon) {
-    studentAvatarIcon.innerHTML = '';
-    studentAvatarIcon.style.backgroundImage = 'url(' + dataUrl + ')';
-    studentAvatarIcon.style.backgroundSize = 'cover';
-    studentAvatarIcon.style.backgroundPosition = 'center';
+  var user = JSON.parse(localStorage.getItem('user') || 'null');
+  if (!user || user.id == null) { showToast('Not signed in.', 'error'); return; }
+  try {
+    localStorage.setItem(profileAvatarStorageKey(user.id), dataUrl);
+  } catch (err) {
+    console.error(err);
+    showToast('Could not save photo. Try a smaller image.', 'error');
+    return;
   }
+  applyProfileAvatarDataUrl(dataUrl);
   showToast('Profile picture updated!', 'success');
   cancelPicUpload();
 }
+
+document.addEventListener('keydown', function(e) {
+  if (e.key !== 'Enter' && e.key !== ' ') return;
+  var t = e.target;
+  if (!t || !t.classList || !t.classList.contains('profile-photo-tappable')) return;
+  e.preventDefault();
+  openProfilePhotoViewer();
+});
 
 document.addEventListener('DOMContentLoaded', function() {
   var area = document.getElementById('pic-upload-area');

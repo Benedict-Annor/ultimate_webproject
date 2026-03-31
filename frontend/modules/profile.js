@@ -19,6 +19,8 @@ async function loadProfile() {
       ? new Date(user.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
       : '—';
     set('sprofile-enrollment-date',  enrollDate);
+    const profRole = document.getElementById('prof-role');
+    if (profRole && typeof formatRoleDisplay === 'function') profRole.value = formatRoleDisplay(user.role);
   } catch (err) {
     console.error('loadProfile error:', err);
     showToast('Failed to load profile. Please try again.', 'error');

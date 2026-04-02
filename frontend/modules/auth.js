@@ -29,6 +29,18 @@ function logout() {
   goTo('page-landing');
 }
 
+function fillLogin(el) {
+  var email = el.getAttribute('data-email');
+  if (!email) return;
+  document.getElementById('login-email').value = email;
+  document.getElementById('login-pw').value = 'password123';
+  var isStudent = email === 'alex@knust.edu.gh';
+  document.querySelectorAll('#page-login .role-btn').forEach(function(btn) {
+    btn.classList.toggle('active', isStudent ? btn.textContent.trim() === 'Student' : btn.textContent.trim() === 'Lecturer');
+  });
+  showToast('Credentials filled — tap Sign In', 'info');
+}
+
 async function signIn() {
   const email    = document.getElementById('login-email').value.trim();
   const password = document.getElementById('login-pw').value.trim();

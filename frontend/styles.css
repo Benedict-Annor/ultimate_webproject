@@ -367,6 +367,53 @@ html.dark .input-wrap .eye-btn:hover { color: var(--text); background: var(--bg-
 .link-btn:hover { text-decoration: underline; }
 .auth-footer { text-align: center; margin-top: 20px; font-size: 14px; color: var(--text-muted); }
 .auth-footer a { color: var(--accent); text-decoration: none; font-weight: 600; cursor: pointer; }
+
+/* Demo credentials box */
+.demo-credentials {
+  border: 1px dashed var(--border-light); border-radius: var(--radius);
+  margin-bottom: 20px; overflow: hidden;
+  background: var(--bg-surface, var(--bg));
+}
+.demo-credentials-header {
+  display: flex; align-items: center; gap: 6px;
+  padding: 10px 14px; font-size: 12px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.5px; color: var(--accent);
+  background: var(--accent-light); cursor: pointer; -webkit-user-select: none; user-select: none;
+}
+.demo-credentials:not(.collapsed) .demo-credentials-header { border-bottom: 1px dashed var(--border-light); }
+.demo-chevron { margin-left: auto; transition: transform 0.25s ease; }
+.demo-credentials.collapsed .demo-chevron { transform: rotate(-90deg); }
+.demo-credentials-body {
+  padding: 12px 14px;
+  max-height: 300px; overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease, opacity 0.25s ease;
+  opacity: 1;
+}
+.demo-credentials.collapsed .demo-credentials-body {
+  max-height: 0; padding-top: 0; padding-bottom: 0; opacity: 0;
+}
+.demo-role-label {
+  font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px;
+  color: var(--text-lighter); margin-bottom: 6px;
+}
+.demo-role-label + .demo-role-label,
+.demo-emails + .demo-role-label { margin-top: 10px; }
+.demo-emails { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 4px; }
+.demo-email {
+  display: inline-block; font-size: 12.5px; font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  background: var(--bg-card); border: 1px solid var(--border-light); border-radius: 6px;
+  padding: 4px 10px; cursor: pointer; color: var(--text); transition: all 0.15s;
+}
+.demo-email:hover { background: var(--accent-light); color: var(--accent); border-color: var(--accent); }
+.demo-password {
+  margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--border-light);
+  font-size: 12.5px; color: var(--text-muted);
+}
+.demo-password code {
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  background: var(--bg-card); border: 1px solid var(--border-light); border-radius: 4px;
+  padding: 2px 7px; font-size: 12px; font-weight: 600; color: var(--text);
+}
 .back-home { text-align: center; margin-top: 20px; }
 .back-home a { color: var(--text-muted); font-size: 14px; cursor: pointer; }
 .back-home a:hover { color: var(--accent); }

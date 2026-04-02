@@ -160,6 +160,28 @@
         <button class="link-btn" onclick="goTo('page-forgot')">Forgot password?</button>
       </div>
 
+      <div class="demo-credentials collapsed">
+        <div class="demo-credentials-header" onclick="this.parentElement.classList.toggle('collapsed')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          Demo Accounts
+          <svg class="demo-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="demo-credentials-body">
+          <div class="demo-role-label">Lecturer</div>
+          <div class="demo-emails">
+            <span class="demo-email" onclick="fillLogin(this)" data-email="banning@knust.edu.gh">banning@knust.edu.gh</span>
+            <span class="demo-email" onclick="fillLogin(this)" data-email="panford@knust.edu.gh">panford@knust.edu.gh</span>
+            <span class="demo-email" onclick="fillLogin(this)" data-email="gyening@knust.edu.gh">gyening@knust.edu.gh</span>
+            <span class="demo-email" onclick="fillLogin(this)" data-email="partey@knust.edu.gh">partey@knust.edu.gh</span>
+          </div>
+          <div class="demo-role-label">Student</div>
+          <div class="demo-emails">
+            <span class="demo-email" onclick="fillLogin(this)" data-email="alex@knust.edu.gh">alex@knust.edu.gh</span>
+          </div>
+          <div class="demo-password">Password for all: <code>password123</code></div>
+        </div>
+      </div>
+
       <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="signIn()">Sign In</button>
 
       <div class="auth-footer">
